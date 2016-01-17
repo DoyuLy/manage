@@ -18,9 +18,9 @@
   </context:component-scan>
 
   <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-    <property name="url" value="jdbc:mysql://git.c.ximgs.net:3306/go2plus?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true" />
-    <property name="username" value="go2plus_test" />
-    <property name="password" value="WImuJEVsneD3LL7B" />
+    <property name="url" value="jdbc:mysql://localhost:3306/tpm?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true" />
+    <property name="username" value="root" />
+    <property name="password" value="root" />
 
 
     <!-- 配置初始化大小、最小、最大 -->
@@ -49,16 +49,8 @@
     <property name="dataSource" ref="dataSource" />
     <property name="typeAliasesPackage"
       value="
-    com.go2plus.core.common.vo;
-    com.go2plus.core.page.vo;
-    com.go2plus.core.portal.vo;
-    com.go2plus.core.product.vo;
     com.go2plus.core.publish.vo;
     com.go2plus.core.userCenter.vo;
-    com.go2plus.core.backgroundManage.vo;
-    com.go2plus.core.specialTopic.vo;
-    com.go2plus.core.guang.vo;
-    com.go2plus.core.promotion.vo;
     " />
     <property name="plugins">
       <array>

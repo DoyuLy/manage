@@ -100,7 +100,7 @@ public class SignInController extends BaseVerificationController {
       verifyCode = (verifyCode == null || verifyCode.isEmpty()) ? "" : verifyCode.trim().toLowerCase();
 
       // TODO 预定义错误码 enum
-      int errorCode = 0; // 0:正常;1：用户名账号或密码不能为空;2:没有此用户;3:密码错误;4:验证码过期;5.验证码错误;6:非法登录
+      int errorCode = 0; // 0:正常;1:用户名账号或密码不能为空;2:没有此用户;3:密码错误;4:验证码过期;5.验证码错误;6:非法登录
       boolean f = true;
       if (userName.isEmpty() || userName.isEmpty()) {
         errorCode = 1;

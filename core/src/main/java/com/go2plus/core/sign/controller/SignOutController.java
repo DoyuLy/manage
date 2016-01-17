@@ -23,7 +23,7 @@ import com.go2plus.common.mvc.Box;
  * 
  * 登录Controller, 处理用户登录相关的请求
  * 
- * @author gaofeng
+ * @author duyu
  * @since 2015-10-20
  */
 @Controller
