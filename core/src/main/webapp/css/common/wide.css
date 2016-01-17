@@ -1,0 +1,5 @@
+@charset "utf-8";
+@media screen and (min-width:1440px) {
+	.content{width: 1432px!important;}
+	.list-ends{margin-right: 0!important}
+}

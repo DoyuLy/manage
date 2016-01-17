@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.portal.dao.PortalDao">
+
+  <select id="getBanners" resultType="Promotion">
+    SELECT DISTINCT *
+    FROM promotion
+    WHERE pos_x like 'a%'
+    AND start_time &lt;= NOW()
+    AND end_time &gt;
+    NOW()
+    AND state=1
+    order by pos_x ASC limit 14
+  </select>
+
+  <resultMap type="Promotion" id="PromotionResultMap">
+    <result property="supplier.title" column="supplier_title" />
+    <result property="product.price" column="price" />
+    <result property="product.characters" column="characters" />
+    <result property="product.articleNumber" column="article_number" />
+    <result property="product.indexImage" column="index_image" />
+  </resultMap>
+  <!-- 当天广告位 -->
+  <select id="getCurPromotions" resultMap="PromotionResultMap">
+    select DISTINCT
+    b.id,
+    b.characters,
+    b.article_number,
+    if(b.supplier_index_image is null,
+    b.index_image, b.supplier_index_image) index_image,
+    b.price,
+    if(c.brand='', c.title, c.brand) supplier_title
+    from promotion a
+    left join
+    product b on a.product_id=b.id
+    left join supplier c on b.user_id=c.user_id
+    where a.state=1
+    and a.start_time&lt;=now()
+    and
+    a.end_time&gt;now()
+    and a.product_id is not null
+    and a.pos_x regexp
+    'c1|c2|c3|c4|c5|c6|c7|c8|c9|c10|c11|c12|d1|d2|d3|d4|d5|d6|d7|d8|d9|d10|d11|d12|i1|i2|i3|i4|i5|i6|i7|i8|i9|i10|i11|i12|j1|j2|j3|j4|j5|j6|j7|j8|j9|j10|j11|j12|k1|k2|k3|k4|k5|k6|K7|k8|k9|k10|k11|k12|o1|o2|o3|o4|o5|o6|o7|o8|o9|o10|o11|o12|p1|p2|p3|p4|p5|p6|p7|p8|p9|p10|p11|p12|q1|q2|q3|q4|q5|q6|q7|q8|q9|q10|q11|q12|r1|r2|r3|r4|r5|r6|r7|r8|r9|r10|r11|r12|s1|s2|s3|s4|s5|s6|s7|s8|s9|s10|s11|s12'
+    order by a.start_time asc
+    limit 120
+  </select>
+
+
+  <!-- 当天精选商品(已订购) -->
+  <select id="getSelections" resultMap="PromotionResultMap">
+    select
+    b.id,
+    b.characters,
+    b.article_number,
+    if(b.supplier_index_image is null, b.index_image, b.supplier_index_image) index_image,
+    b.price,
+    if(c.brand='', c.title, c.brand) supplier_title
+    from promotion a
+    left join product b on a.product_id=b.id
+    left join supplier c on
+    b.user_id=c.user_id
+    where a.state=1
+    and a.pay_state&gt;1
+    and a.st_start_time&lt;=now()
+    <!-- and a.st_end_time&gt;now() -->
+    and a.st_end_time&gt; date_sub(now(), interval 40 day)
+    and a.product_id is not null
+    order by a.st_start_time asc
+    limit 120
+  </select>
+
+  <!-- 获取近3日所有商品中的广告 -->
+  <select id="getCthPromotions" resultMap="CthPromotionResultMap">
+    select
+    a.id,
+    a.characters,
+    a.article_number,
+    if(a.supplier_index_image is null, a.index_image, a.supplier_index_image) index_image,
+    a.price,
+    if(b.brand="", b.title, b.brand) supplier_title
+    from product a
+    left join supplier b on a.user_id=b.user_id
+    <!-- left join user c on a.user_id=c.id -->
+    <!-- left join product_stats d on a.id = d.product_id -->
+    where DATE_ADD(a.create_time, INTERVAL 3 DAY) &gt;= date_sub(NOW(), interval 100 day)
+    and a.id in
+    (
+    select
+    b.id
+    from promotion a
+    left join
+    product b on a.product_id=b.id
+    where a.state=1
+    and a.start_time &lt;= now()
+    and a.end_time &gt; now()
+    <!-- and a.end_time &gt; date_sub(NOW(), interval 100 day) -->
+    and a.product_id is not null
+    )
+    <!-- order by a.create_time desc -->
+    order by rand()
+    limit 120
+  </select>
+
+  <resultMap type="Product" id="CthPromotionResultMap">
+    <result property="supplier.title" column="supplier_title" />
+  </resultMap>
+</mapper>
+

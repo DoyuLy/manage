@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.common.dao.MessageDao">
+
+<!--1B端 -->
+  <!-- 插入一条用户信息 -->
+  <insert id="insertUserMessage" useGeneratedKeys="true" keyProperty="id" parameterType="Message">
+    insert into message(
+    user_id,
+    product_id,
+    content,
+    type,
+    weight,
+    state,
+    create_time,
+    update_time
+    )
+    values(
+    #{userId},
+    #{productId},
+    #{content},
+    #{type},
+    #{weight},
+    #{state},
+    #{createTime},
+    #{updateTime}
+    )
+  </insert>
+
+  <!-- 查询最新消息 -->
+  <select id="queryLastMessage" parameterType="int" resultType="Message">
+    select
+    user_id,
+    product_id,
+    content,
+    type,
+    weight,
+    state,
+    create_time,
+    update_time
+    from message
+    where user_id=#{userId}
+    and state=1
+    order by create_time DESC
+    limit 10;
+  </select>
+
+  <!-- 2B端 -->
+  <!-- 查询淘宝卖家的产品消息 -->
+  <select id="querySellerProductNotice" parameterType="String" resultMap="sellerProductMap">
+    SELECT
+    a.create_time as message_create_time,
+    a.content,
+    b.title, c.subdomain
+    FROM
+    message a
+    INNER JOIN
+    supplier b ON a.user_id
+    =
+    b.user_id
+    LEFT JOIN
+    site c ON a.user_id
+    = c.user_id
+    INNER JOIN
+    ln_seller2product AS d ON a.product_id = d.product_id
+    WHERE
+    a.type = 'corplog'
+    AND a.create_time > DATE_SUB(CURDATE(),
+    INTERVAL 90 DAY)
+    AND
+    a.STATE = 1
+    AND d.seller_user_id = #{sellerId}
+    ORDER BY
+    a.create_time DESC,b.title DESC
+  </select>
+  <resultMap id="sellerProductMap" type="Message">
+    <result property="content" column="content" />
+    <result property="createTime" column="message_create_time" />
+    <association property="supplier" column="user_id" javaType="Supplier">
+      <result property="title" column="title" />
+    </association>
+    <association property="site" column="user_id" javaType="Site">
+      <result property="subdomain" column="subdomain" />
+    </association>
+  </resultMap>
+
+  <select id="querySellerSupplierNotice" resultMap="sellerSupplierMap">
+    SELECT distinct
+    a.id,
+    a.create_time as message_create_time,
+    a.content,
+    b.title,
+    c.subdomain
+    FROM message a
+    INNER JOIN supplier b
+    ON
+    a.user_id = b.user_id
+    LEFT JOIN site
+    c
+    ON
+    a.user_id = c.user_id
+    INNER JOIN ln_seller2product
+    d
+    ON a.user_id =
+    d.supplier_user_id
+    WHERE a.type
+    = 'corpnews'
+    AND a.create_time >
+    date_sub(curdate(), interval 90 day)
+    AND a.STATE = 1
+    AND
+    d.seller_user_id =
+    #{sellerId}
+    and a.content is not null
+    ORDER BY
+    a.create_time
+    DESC,b.title DESC
+  </select>
+
+  <resultMap type="Message" id="sellerSupplierMap">
+    <result property="content" column="content" />
+    <result property="id" column="id" />
+    <result property="createTime" column="message_create_time" />
+    <collection property="suppliers" column="user_id" ofType="Supplier">
+      <result property="title" column="title" />
+    </collection>
+  </resultMap>
+
+  <select id="queryBySupplier" resultType="Message">
+    SELECT content,
+           create_time
+    FROM message
+    <where>
+      user_id=#{userId} 
+      AND create_time>DATE_SUB(NOW(), INTERVAL 1 MONTH) 
+      AND state=1
+    </where>
+    ORDER BY create_time DESC
+    LIMIT 5
+  </select>
+  
+</mapper>

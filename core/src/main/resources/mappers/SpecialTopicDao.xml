@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.specialTopic.dao.SpecialTopicDao">
+  <select id="querySpecial" resultType="SpecialTopic">
+    SELECT
+    id,
+    title,
+    special_comment,
+    background_image,
+    topic_startTime
+    FROM
+    special_topic
+    WHERE
+    state=1
+  </select>
+
+  <select id="getApplyInfo" parameterType="String" resultType="boolean">
+    SELECT if(count(*)>0,true,false)
+    FROM ln_special_item a
+    LEFT JOIN
+    special_new b on a.special_id=b.id
+    WHERE a.product_id=#{productId}
+    AND a.state=1
+    AND a.audit_state=1
+    AND (b.enroll_end_time>now() OR b.end_time>now());
+  </select>
+</mapper>

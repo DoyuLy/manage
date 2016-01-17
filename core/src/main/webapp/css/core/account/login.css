@@ -1,0 +1,87 @@
+*{margin: 0;padding: 0;border:0;text-decoration: none;outline: none;}
+.f12{font-size:12px!important}
+.f13{font-size:13px!important}
+.f14{font-size:14px!important}
+.fy12{font-size:12px!important;font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei";}
+.fy14{font-size:14px!important;font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei";}
+.fy16{font-size:16px!important;font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei";}
+.fy18{font-size:18px!important;font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei";}
+.fy20{font-size:20px!important;font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei";}
+.fy24{font-size:24px!important;font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei";}
+.fy30{font-size:30px!important;font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei";}
+.bold{font-weight:bold}
+.normal{font-weight:normal}
+.aaaaaa{color: #aaaaaa;}
+.ff6c00{color: #ff6c00;}
+.separate{margin: 0 5px;color: #cbcbcb;}
+/*header*/
+.head_container{width: 100%;padding-top: 1px;border-bottom: 1px solid #e6e6e6;height: 34px;background-color: #f3f3f3;}
+.user_status{width: 1164px;height: 34px;margin: 0 auto;color: #818181;line-height: 34px;}
+.users{float: left;border-left: 1px solid #e6e6e6;border-right: 1px solid #e6e6e6;padding: 0 20px;}
+.userscenter{float: left;cursor: pointer;}
+.users span{float: left;}
+.tri_gray{display: block;width: 8px;height: 5px;background-image: url(/img/b1.png);background-repeat: no-repeat;bacground-position: 0 0;margin-top: 14px;margin-left: 5px;}
+.exit{color: #818181;margin-left: 5px;cursor: pointer;float: left;line-height: 34px;background-color: transparent;}
+.hnav{float: right;height: 34px;border-right: 1px solid #e6e6e6;}
+.det_nav{padding: 0 10px;border-left: 1px solid #e6e6e6;height: 34px;float: left;position: relative;box-sizing: border-box;width: 83px;text-align: center}
+.det_nav a{color: #818181;float: left;}
+.det_nav a:hover{color: #ff6c00;}
+.tri_black{display: block;width: 8px;height: 6px;background-image: url(/img/b1.png);background-repeat: no-repeat;background-position: 0 -6px;margin-top: 14px;margin-left: 5px;float: left;}
+.fd{z-index: 99;display: none;padding: 0 10px 10px;background-color: white;width: 84px;box-sizing: border-box;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;position: absolute;top: 34px;right: -1px;border: 1px solid #e6e6e6;border-top: 0;line-height: 22px;}
+.fdl{float: none!important;width: 50px;display: inline-block;line-height: 22px;text-align: left}
+.mouseon{background-color: white;}
+.mouseon .tri_black{background-position: 0 -12px;background-image: url("/img/b1.png")}
+.mouseon .fd{display: block}
+.qq{cursor: pointer}
+div.error .login_l{border-color: red;}
+input.error{border-color: red;}
+label.error{color: red;font-size: 12px;position: absolute;bottom: -15px;width: 100%;left: 0;}
+div.focusin .login_l{border-color: #ff6c00;}
+div.focusin .name_l{background-image: url(/img/h_i_o.jpg);background-position: 0 0;}
+div.focusin .pass_l{background-image: url(/img/p_i_o.jpg);background-position: 0 0;}
+div.focusin .input{border-color: #ff6c00;}
+/*logo*/
+.message{height: 43px;width: 1164px;margin: 36px auto 0;}
+.logo{width: 107px;height: 43px;background-image: url(/img/logo_03.png);background-repeat: no-repeat;float: left;}
+.about_us{float: left;height: 43px;border-left: 1px solid #d9d9d9;margin-left: 11px;padding-left: 10px;}
+.welcome{line-height: 28px;}
+/*register content*/
+.content{margin: 28px auto 0;width: 100%;position: relative;height: 500px}
+.b2{width: 100%;height: 100%;}
+.po{width: 1164px;margin: 0 auto;height: 0;position: relative;}
+.login{width: 378px;height: 422px;position: absolute;right: 0;background-color: white;top: -460px;padding: 25px;box-sizing: border-box;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;}
+.l_t{color: black;width: 100%;margin-bottom: 10px;}
+.rin{float: right;}
+.login_l{border: 1px solid #bdbdbd;width: 38px;height: 38px;float: left;background-image: url(/img/b1.png);background-repeat: no-repeat;margin-bottom: 19px;}
+.name_l{background-position: -266px 0;}
+.pass_l{background-position: -305px 0;}
+.det_message{float: left;width: 327px;height: 40px;position: relative;margin-bottom: 19px;}
+.input_r{display: none;height: 38px;width: 26px;background-image: url(/img/b1.png);background-repeat: no-repeat;background-position: -239px 0;position: absolute;top: 1px;right: 5px;cursor: pointer;}
+.input{font-size: 14px;width: 287px;height: 40px;border: 1px solid #bdbdbd;border-left: 0;padding-left: 5px;box-sizing: border-box;}
+.sto{color: #7b7b7b;clear: both;line-height: 16px;}
+.checkbox{position: relative;top: 3px;}
+.fp{float: right;color: #7b7b7b;}
+.sub{height: 40px;line-height: 40px;width: 100%;background-color: #ff6c00;color: white;text-align: center;margin-top: 20px;margin-bottom: 10px;cursor: pointer;}
+.pl{color: #828282;line-height: 25px;}
+.dl{color: #969696;display: block;float: left;}
+.idea{width: 1164px;margin: 17px auto 0;color: #a2a2a2;text-align: right;}
+/*footer*/
+footer{margin: 37px auto 0;width: 989px;height: 105px;color: #989898;padding-top: 18px;}
+.fnav{height: 32px;line-height: 32px;text-align: center;width: 715px;margin: 0 auto}
+.fnav span{line-height: 32px;display: block;float: left;}
+.fnav a{line-height: 32px;display: block;float: left;}
+.fnav button{line-height: 32px;display: block;float: left;}
+.flink{color: #989898;}
+.flink:hover{color: #ff6c00;}
+.fqq{background-image: url(/img/b1.png);background-repeat: no-repeat;background-position: -146px 0;width: 92px;height: 22px;cursor: pointer;display: inline-block;position: relative;top: 5px;margin-right: 10px;}
+.deep{color: #7c7c7c;margin-left: 10px;}
+.btn-mail{height: 22px;margin-top: 2px;}
+.btn-mail img{display: block;}
+/*验证以及后端错误提示*/
+.back-error{;background-image: url("/img/t_l.jpg");background-repeat: no-repeat;color: red;font-size: 14px;display: block;border: 1px solid #ffe57d;background-color: #fff6d2;height: 24px;padding-left: 39px;line-height: 24px;margin-bottom: 10px;}
+.qr-input{  border-left: 1px solid #bdbdbd;width: 90px!important;float: left}
+.qr-box{height: 50px;}
+.qr-box img{float: left}
+.qr-box span{float: left;font-size: 12px;color: #7b7b7b;line-height: 40px;}
+.qr-box .refimg{color: #5a77ba;line-height: 40px;cursor: pointer}
+#errorMsg{color: red}

@@ -1,0 +1,69 @@
+package ${packageName}.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.go2plus.common.mvc.DAO;
+import org.springframework.stereotype.Repository;
+
+import ${packageName}.${entityPackageName}.${entityName};
+
+ /**
+ * <p>Description: this is ${entityName}Dao
+ * <p>User: ${author}
+ * <p>Date: ${date}
+ * <p>Version: 1.0
+ */
+@Repository
+public interface ${entityName}Dao  extends DAO{
+	
+	/**
+	 * page query ${entityName} information
+	 * @param queryMap
+	 * @return ArrayList
+	 */
+	@SuppressWarnings("unchecked")
+    public List<${entityName}> findPageList(Map<String,Object> queryMap);
+    
+    /**
+	 * query ${entityName} information
+	 * @param query${entityName}
+	 * @return ArrayList
+	 */
+    @SuppressWarnings("unchecked")
+    public List<${entityName}> findList();
+    
+    /**
+	 * query ${entityName} information Count
+	 * @param query${entityName}
+	 * @return Integer
+	 */
+    public Integer findCount(Map<String,Object> queryMap);
+    
+    /**
+	 * get one ${entityName} information
+	 * @param id
+	 * @return ${entityName}
+	 */
+    public ${entityName} findById(Integer id);
+	
+	/**
+	 * insert one ${entityName} information
+	 * @param id
+	 */
+	public void insert(${entityName} ${entityName.toLowerCase()});
+	
+	/**
+	 * update one ${entityName} information
+	 * @param ${entityName}
+	 */
+    public void update(${entityName} ${entityName.toLowerCase()});
+    
+    /**
+	 * delete one ${entityName} information
+	 * @param id
+	 */
+    public void delete(Integer id);
+    
+   	
+}

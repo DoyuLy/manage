@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.publish.dao.LogDownloadDao">
+
+  <select id="getLogDownloads" resultMap="logDownloadResultMap">
+    SELECT
+    a.create_time,
+    a.id,a.supplier_user_id,a.product_id,
+    b.mobile,c.qq,c.address,c.title,d.price,c.phone,d.article_number,
+    ifnull(ifnull(d.supplier_index_image,d.index_image),d.seller_index_image) AS index_image
+    FROM ${param2} AS a
+    INNER JOIN user AS b ON
+    a.supplier_user_id=b.id
+    INNER JOIN supplier c ON a.supplier_user_id=c.user_id
+    INNER JOIN product d ON a.product_id=d.id
+    WHERE
+    a.user_id=#{param1}
+    and a.state=1
+    order by a.create_time desc
+  </select>
+
+
+  <resultMap id="logDownloadResultMap" type="LogDownload">
+    <result property="user.mobile" column="mobile" />
+    <result property="supplier.qq" column="qq" />
+    <result property="supplier.address" column="address" />
+    <result property="supplier.title" column="title" />
+    <result property="supplier.phone" column="phone" />
+    <result property="product.price" column="price" />
+    <result property="product.articleNumber" column="article_number" />
+    <result property="product.indexImage" column="index_image" />
+
+  </resultMap>
+
+  <update id="delLogDownload" parameterType="Integer">
+    UPDATE log_download SET state=-1
+    <where>
+      id in
+      <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </where>
+  </update>
+
+  <update id="delMultiDownload">
+    UPDATE #{param2} SET state=-1
+    WHERE id IN
+    <foreach collection="param1" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
+
+  <select id="getDownloadList" parameterType="int" resultMap="downloadListMap">
+    SELECT a.create_time,b.username,c.laddress
+    FROM log_download a
+    INNER JOIN user b ON a.user_id=b.id
+    INNER JOIN user_meta c ON a.user_id=c.user_id
+    WHERE a.state=1 AND b.state=1 AND a.type='0'
+    AND a.product_id=#{productId}
+    ORDER BY b.id DESC
+    LIMIT 20
+  </select>
+
+  <resultMap type="LogDownload" id="downloadListMap">
+    <result property="user.username" column="username" />
+    <result property="userMeta.laddress" column="laddress" />
+  </resultMap>
+</mapper>

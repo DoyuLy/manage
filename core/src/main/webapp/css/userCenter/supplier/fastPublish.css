@@ -1,0 +1,13 @@
+@charset "utf-8";
+/*发布模块*/
+.right-warper{float:left;width:603px;overflow:hidden;}
+.right-warper h2{float:left;display:inline;margin:0;margin-top:10px;padding:0;font-size:16px;width:590px;}
+.right-warper h2 span{font-size:14px;font-weight:normal;margin:0 10px;color:#666;}
+.right-warper h2 a{margin:0 10px;}
+.right-warper p{float:left;display:inline;margin-top:6px;}
+.tips{float:left;margin-top:10px;margin-right:17px;padding:10px;font-size:12px;border:1px solid #ddd;}
+/*右侧提示信息*/
+.detail-right{float:left;width:215px;border-left:1px solid #C0C0C0;overflow:hidden;}
+.detail-right h2{float:left;display:inline;margin:0;margin-left:10px;margin-top:10px;padding:0;font-size:16px;width:200px;}
+.detail-right ul{float:left;display:inline;margin:10px;margin-top:0;padding:0;list-style-type:none;}
+.detail-right ul li{margin:0;padding:0;margin-top:10px;font-size:12px;line-height:20px;padding-bottom:10px;border-bottom:1px dotted #ddd;}

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.publish.dao.PublishDao">
+
+  <select id="getTaobaoItemsRecord" resultMap="taobaoItemsRecordMap">
+    SELECT publish_time
+    FROM taobao_item
+    WHERE user_id=#{userId} AND product_id= #{productId} order by publish_time desc
+  </select>
+
+  <resultMap id="taobaoItemsRecordMap" type="TaobaoItem">
+    <result property="publishTime" column="publish_time" />
+  </resultMap>
+
+  <!-- 产品发布到淘宝 -->
+  <select id="getTaobaoList" parameterType="int" resultMap="taobaoItemMap">
+    SELECT a.num_iid,a.taobao_nick,a.create_time,b.taobao_seller_credit_level
+    FROM taobao_item a
+    INNER JOIN seller b 
+    ON a.taobao_nick=b.auth_user_nick
+    WHERE a.state=1
+    AND a.product_id=#{productId}
+    and a.create_time ORDER BY a.create_time,a.taobao_nick DESC
+    LIMIT 20
+  </select>
+  
+  <resultMap id="taobaoItemMap"  type="TaobaoItem">
+  <result property="seller.taobaoSellerCreditLevel" column="taobao_seller_credit_level"/>
+  </resultMap>
+  
+  
+  <!-- 获取下载产品信息  -->
+  
+  <resultMap type="ProductDownload" id="publishDownloadMap">
+    <id property="id" column="id" />
+     <result property="indexImage" column="index_image"/>
+    
+    <result property="supplier.isManufacturer" column="is_manufacturer"/>
+    <result property="supplier.title" column="supplier_title"/>
+   	<result property="supplier.marketId" column="market_id"/>
+    <result property="supplier.certifiedType" column="certified_type"/>
+    
+    <result property="productLabel.name" column="label_name"/>
+    
+    <result property="productStats.taobaoCountAlltime" column="taobao_count_alltime"/>
+    <result property="productStats.taobaoCountSeason" column="taobao_count_season"/>
+    <result property="productStats.downCountAlltime" column="down_count_alltime"/>
+    <result property="productStats.downCountSeason" column="down_count_season"/>
+    
+    
+    <result property="category.taobaoCid" column="taobao_cid"/>
+    <result property="category.taobaoParentCid" column="taobao_parent_cid"/>
+    <result property="category.title" column="product_category"/>
+    
+    <result property="productComment.name" column="name"/>
+    <result property="productComment.face" column="face"/>
+    <result property="productComment.content" column="content"/>
+    
+    <result property="productMeta.descriptionBin" column="description_bin"/>
+  </resultMap>
+  <select id="getDownloadProduct" parameterType="String"  resultMap="publishDownloadMap">
+   SELECT a.*,
+	g.name as label_name,
+	IFNULL(b.brand,b.title) AS supplier_title,
+	b.market_id,
+	b.is_manufacturer,
+	b.certified_type,
+	c.taobao_count_alltime,
+	c.taobao_count_season,
+	c.down_count_alltime,
+	c.down_count_season,
+	d.taobao_cid,
+	cast(UNCOMPRESS(e.description_bin) as char) AS description_bin,
+	d.taobao_parent_cid,
+	d.title as product_category,
+	co.name,
+	co.face,
+	co.content 
+	FROM product a 
+	INNER JOIN supplier b ON a.user_id=b.user_id				
+	LEFT JOIN product_stats c ON a.id=c.product_id
+	INNER JOIN category d ON a.category_id=d.id
+    INNER JOIN product_meta e ON a.id=e.product_id
+    INNER JOIN user f ON a.user_id=f.id
+    LEFT JOIN product_comment co ON co.product_id=a.id
+	LEFT JOIN product_label g on g.id=a.label_id
+	WHERE a.state>=0 AND f.state=1 AND a.id=#{pid}
+  </select>
+  
+  <!-- 获取用户当天下载或者外连的次数 -->
+  <select id="getDownOrLinkTimes" resultType="Integer">
+  	SELECT count(id) as num 
+  	FROM log_download 
+    WHERE user_id=#{userId} AND LEFT(create_time,10) = date_format(now(),'%Y-%m-%d');
+  </select>
+  
+  <!-- 下载页面关联得用户商品 ,只查询除本身之外的8个商品-->
+  <select id="getProductBySupplierId" parameterType="String"  resultMap="publishDownloadMap">
+	  SELECT a.*,
+	  IFNULL(a.supplier_index_image,IFNULL(a.seller_index_image,a.index_image)) AS index_image,
+	  IFNULL(b.brand,b.title) AS supplier_title 
+	  FROM product a
+	  LEFT JOIN supplier b ON a.user_id=b.user_id
+	  WHERE a.state=1 AND a.is_block=0 AND a.user_id=#{userId}
+	  AND a.id != #{pid}
+	  ORDER BY a.is_highlight DESC,a.is_unique DESC,a.is_showcase DESC LIMIT 8;
+  </select>
+  
+  <!-- 根据pid获取商品压缩包信息 -->
+  <select id="getFile" parameterType="String" resultType="Product">
+  	SELECT 
+	  	file,
+	  	user_id,
+	  	price,
+	  	file_info
+	FROM product
+	WHERE id=#{pid};
+  </select>
+  
+  <!-- 获取产品的关联记录信息 -->
+  <select id="getProductLinkInfo" parameterType="String" resultType="LogDownload">
+  	SELECT * 
+  	FROM log_download 
+    WHERE type='1' AND user_id=#{userId} AND product_id=#{pid} 
+    ORDER BY id DESC LIMIT 1
+  </select>
+</mapper>

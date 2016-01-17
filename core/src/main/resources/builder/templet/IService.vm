@@ -1,0 +1,78 @@
+package ${packageName}.service;
+
+import java.util.List;
+import java.util.Map;
+
+import ${packageName}.${entityPackageName}.${entityName};
+import com.go2plus.photography.common.exception.SystemException;
+
+ /**
+ * <p>Description: this is ${entityName} Service
+ * <p>User: ${author}
+ * <p>Date: ${date}
+ * <p>Version: 1.0
+ */
+ 
+public interface ${entityName}Service {
+
+	/**
+	 * page query ${entityName} information
+	 * @param query${entityName}
+	 * @return ArrayList
+	 * @throws SystemException
+	 */
+    public List<${entityName}> findPageList(Map<String,Object> queryMap) throws SystemException;
+    
+    /**
+	 * query ${entityName} information
+	 * @return ArrayList
+	 * @throws SystemException
+	 
+    public List<${entityName}> findList() throws SystemException;
+    */
+    
+    /**
+	 * get a ${entityName} information
+	 * @param id
+	 * @return ${entityName}
+	 * @throws SystemException
+	 */
+    public ${entityName} findById(Integer id) throws SystemException;
+    
+	/**
+	 * add one ${entityName} information
+	 * @param ${entityName}
+	 * @throws SystemException
+	 */
+	public void add(${entityName} ${entityName.toLowerCase()}) throws SystemException;
+	
+	/**
+	 *  update one ${entityName} information
+	 * @param ${entityName}
+	 * @throws SystemException
+	 */
+	public void update(${entityName} ${entityName.toLowerCase()}) throws SystemException;
+	
+	/**
+	 * add or update one ${entityName} information
+	 * @param ${entityName}
+	 * @throws SystemException
+	 */
+	public boolean save(${entityName} ${entityName.toLowerCase()}) throws SystemException;
+	
+	/**
+	 * delete one or more ${entityName} information
+	 * @param ids by "," split
+	 * @throws SystemException
+	 */
+    public void delete(String[] selectedIds )throws SystemException;
+    
+    /**
+	 * delete one ${entityName} information
+	 * @param id
+	 * @throws SystemException
+	 */
+    public void delete(Integer id)throws SystemException;
+    
+}
+

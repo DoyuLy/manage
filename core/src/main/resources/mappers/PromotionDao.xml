@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.promotion.dao.PromotionDao">
+
+  <select id="getSponsers" resultType="Promotion">
+    SELECT *,IF(id=4432,0,1) AS rank
+    FROM promotion
+    WHERE pos_x LIKE '%${param1}%' AND NOW()>=start_time
+    AND end_time>NOW()
+    AND state=1
+    <if test="param2.length>0">
+      AND id not in
+      <foreach collection="param2" item="promotionId" index="index" open="(" close=")" separator=",">
+        #{promotionId}
+      </foreach>
+    </if>
+    LIMIT 5
+  </select>
+
+  <select id="getPromotionByStartTimeAndUserId" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT COUNT(*) AS num FROM promotion
+    WHERE pos_x REGEXP 'u|g'
+    AND
+    start_time=#{param1}
+    AND user_id=#{param2}
+  </select>
+
+  <select id="getOrderedSPsBy" parameterType="Date" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT start_time,end_time,pos_x
+    FROM promotion
+    WHERE pox_x
+    REGEXP 'u|g'
+    AND state=1 AND start_time=#{startDate}
+    ORDER BY pos_x,start_time
+  </select>
+
+  <select id="getFPsByUser" resultMap="getFPsByUserResultMap">
+    SELECT a.*, b.title AS operator_title, c.article_number, c.refer_product_id, c.is_block FROM
+    promotion a
+    LEFT JOIN operator b ON
+    a.operator_id=b.id,
+    LEFT JOIN product c ON a.product_id=c.id
+    WHERE user_id=#{param1}
+    AND DATE(a.end_time)>=CURDATE()
+    <if test="param2">
+      AND a.state=1
+    </if>
+    ORDER BY a.start_time ASC, a.pos_x ASC;
+  </select>
+
+  <resultMap id="getFPsByUserResultMap" type="com.go2plus.core.promotion.vo.Promotion">
+
+    <association property="operator" column="id" javaType="Operator">
+    </association>
+
+    <association property="product" column="id" javaType="Product">
+    </association>
+
+  </resultMap>
+
+  <select id="getStFPsByUser" resultMap="getStFPsByUserResultMap">
+    SELECT a.*,b.title AS operator_title,c.article_number,c.refer_product_id,c.is_block
+    FROM
+    promotion a
+    LEFT JOIN operator b ON
+    a.operator_id=b.id
+    LEFT JOIN product c ON a.product_id=c.id
+    WHERE a.user_id=#{param1}
+    AND DATE(a.st_end_time)>=CURDATE()
+    <if test="valid">
+      AND a.state=1
+    </if>
+    ORDER BY a.st_start_time ASC,a.pos_x ASC;
+  </select>
+
+  <resultMap id="getStFPsByUserResultMap" type="com.go2plus.core.promotion.vo.Promotion">
+
+    <association property="operator" column="id" javaType="Operator">
+    </association>
+
+    <association property="product" column="id" javaType="Product">
+    </association>
+
+  </resultMap>
+
+  <select id="getSuList" parameterType="String" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT pos_x, end_time
+    FROM
+    promotion
+    WHERE pos_x REGEXP #{pos}
+  </select>
+
+  <select id="getOrderedFPs" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT start_time,
+    end_time, pos_x FROM promotion
+    WHERE pos_x REGEXP #{posX}
+    AND state=1
+    AND
+    end_time>CURDATE()
+    ORDER BY pos_x,start_time
+  </select>
+  <!-- 展示广告为表 -->
+  <select id="getGrabFPs" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT
+    *
+    FROM
+    promotion
+    WHERE
+    start_time = '2012-02-10'
+    <!-- AND end_time = '2012-02-18' AND state = '1' AND pos_x REGEXP "e" ORDER BY pos_x,start_time -->
+  </select>
+  <!-- 取消广告位 -->
+  <update id="updatePromotion">
+    update promotion set state="0" where id=${id}
+  </update>
+  <!-- 得到广告位数据以新增到ad_position表 -->
+  <select id="getCancelPromotion" resultType="Promotion">
+    select id,pos_x,pos_y,start_time,end_time from promotion where id=${id}
+  </select>
+  <!-- 抢购广告位 -->
+  <update id="getPromotion">
+    update promotion set user_id=${userId} where id=${id}
+  </update>
+  <!-- 设置我的广告位 待续 -->
+  <update id="setPromotion">
+    update promotion set product_id=${productId} where id=${promotionId}
+  </update>
+  
+  <!-- 已经抢到的广告位 -->
+  <select id="getMyPromotion" resultMap="PromotionMap">
+    SELECT
+      a.*, b.title AS operator_title,
+      c.article_number,
+      c.refer_product_id,
+      c.is_block
+      FROM
+      promotion a
+      LEFT JOIN operator b ON a.operator_id = b.id
+      LEFT JOIN product c ON a.product_id = c.id
+    WHERE
+      a.user_id =${userId}<!-- AND DATE(a.end_time)>=CURDATE()" . $valid_where . " -->
+      and a.state=1
+    ORDER BY
+      a.start_time ASC,
+      a.pos_x ASC
+  </select>
+  <resultMap type="MyPromotion" id="PromotionMap">
+    <id property="id" column="id" />
+    <result property="userId" column="user_id" />
+    <result property="productId" column="product_id" />
+    <result property="posX" column="pos_x" />
+    <result property="posY" column="pos_y" />
+    <result property="link" column="link" />
+    <result property="discount" column="discount" />
+    <result property="coupon" column="coupon" />
+    <result property="totalFee" column="total_fee" />
+    <result property="memo" column="memo" />
+    <result property="operatorId" column="operator_id" />
+    <result property="title" column="title" />
+    <result property="image" column="image" />
+    <result property="startTime" column="start_time" />
+    <result property="endTime" column="end_time" />
+    <result property="timeLogs" column="time_logs" />
+    <result property="payState" column="pay_state" />
+    <result property="gainTime" column="gain_time" />
+    <result property="payType" column="pay_type" />
+    <result property="comment" column="comment" />
+    <result property="addTime" column="add_time" />
+    <result property="orderTime" column="order_time" />
+    <result property="payTime" column="pay_time" />
+    <result property="deleteTime" column="delete_time" />
+    <result property="weight" column="weight" />
+    <result property="state" column="state" />
+    <result property="stateRand" column="state_rand" />
+    <result property="createTime" column="create_time" />
+    <result property="updateTime" column="update_time" />
+    <result property="stStartTime" column="st_start_time" />
+    <result property="stEndTime" column="st_end_time" />
+    <result property="operatorTitle" column="operator_title" />
+    <result property="articleNumber" column="article_number" />
+    <result property="referProductId" column="refer_product_id" />
+    <result property="isBlock" column="is_block" />
+  </resultMap>
+  
+  <resultMap type="Product" id="ProductList">
+    <result property="id" column="id" />
+    <result property="articleNumber" column="article_number" />
+    <result property="userId" column="user_id" />
+  </resultMap>
+  <select id="getMyProduct" resultMap="ProductList">
+    select id,user_id,article_number from product where user_id=${userId} and state=1
+  </select>
+  
+  <select id="queryPromotions" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT a.id,a.image,a.link FROM promotion a
+    <where>
+      id IN
+      <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </where>
+    ORDER BY a.id
+  </select>
+
+  <select id="getNumByStartTimeAndUserId" resultType="int">
+    SELECT COUNT(*) AS num
+    FROM promotion
+    <where>
+      pos_x REGEXP 'u|g'
+      AND start_time = #{startTime, jdbcType=DATE}
+      AND user_id = #{userId};
+    </where>
+  </select>
+
+  <select id="getOrderedUCsBy" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT
+    start_time,
+    end_time,
+    pos_x
+    FROM
+    promotion
+    <where>
+      pos_x REGEXP 'u|g'
+      AND state = 1
+      AND start_time = #{startTime,
+      jdbcType=DATE}
+    </where>
+    ORDER BY
+    pos_x,
+    start_time;
+  </select>
+  <select id="getOrderedMRsBy" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT pos_x,end_time 
+				FROM promotion
+				WHERE pos_x REGEXP  'f1|f2|f3|f4|f5|f6|f7|f8|f9|f10' ;
+  </select>
+  <select id="getOrderedSRsBy" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT
+    start_time,
+    end_time,
+    pos_x
+    FROM
+    promotion
+    <where>
+      pos_x REGEXP 'u|g'
+      AND state = 1
+      AND start_time = #{startTime,
+      jdbcType=DATE}
+    </where>
+    ORDER BY
+    pos_x,
+    start_time;
+  </select>
+  <select id="getAvailableNum" resultType="int">
+    SELECT COUNT(*) AS num
+    FROM promotion
+    <where>
+      pos_x=#{posX}
+      AND start_time = #{startTime, jdbcType=DATE}
+      AND state=1
+    </where>
+  </select>
+
+  <insert id="addFP" useGeneratedKeys="true" keyProperty="id" parameterType="Promotion">
+    INSERT promotion (user_id,
+    pos_x,pos_y,total_fee,discount,link,title,start_time,end_time,comment,pay_state,state,add_time,create_time)
+    VALUES (#{userId}, #{posX},
+    #{posY},
+    #{totalFee}, #{discount}, #{link},
+    #{title}, #{startTime, jdbcType=DATE}, #{endTime, jdbcType=DATE},
+    #{comment}, #{payState},
+    #{state},
+    #{addTime, jdbcType=DATE},
+    #{createTime, jdbcType=DATE})
+  </insert>
+
+  <select id="getFP" resultType="int">
+    SELECT COUNT(*)
+    FROM promotion
+    <where>
+      user_id=#{userId}
+      AND pos_x=#{posX}
+      AND start_time = #{startTime,jdbcType=DATE}
+      AND state = 1
+    </where>
+  </select>
+
+  <select id="getDeletedFPs" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT
+    pos_x,start_time,delete_time
+    FROM promotion
+    <where>
+      state=-1 AND delete_time>TIMESTAMPADD(SECOND, #{seconds}, NOW())
+    </where>
+  </select>
+
+  <select id="getFPsNumByUserId" resultType="int">
+    SELECT COUNT(id) FROM promotion
+    <where>
+      pos_x REGEXP #{posX}
+      AND state=1
+      AND user_id=#{userId}
+      <if test="startTime!=null">
+        AND start_time &gt;= #{startTime, jdbcType=DATE}
+      </if>
+      <if test="endTime!=null">
+        AND end_time &lt;= #{endTime, jdbcType=DATE}
+      </if>
+      <choose>
+        <when test="operatorId!=null">
+          AND operator_id=#{operatorId}
+        </when>
+        <otherwise>
+          AND operator_id IS NULL
+        </otherwise>
+      </choose>
+    </where>
+  </select>
+
+  <select id="getFPs" resultType="com.go2plus.core.promotion.vo.Promotion">
+    SELECT * FROM promotion
+    <where>
+      start_time &gt;= DATE_SUB(#{startTime, jdbcType=DATE},INTERVAL 7 DAY)
+      AND end_time &lt;= DATE_ADD(#{endTime, jdbcType=DATE},INTERVAL 7 DAY)
+      AND user_id=#{userId}
+      AND pos_x REGEXP #{posX}
+      AND state=1
+    </where>
+  </select>
+  <!-- 新增表查询剩余为抢广告位 -->
+  <select id="getADNum" resultType="int">
+    SELECT COUNT(*) AS num FROM ad_position
+    <where>
+      type=#{type}
+    </where>
+  </select>
+  <select id="getAD" resultType="AdPosition">
+    SELECT * FROM ad_position
+    <where>
+      type=#{type}
+    </where>
+  </select>
+  <delete id="delAD">
+    DELETE FROM ad_position WHERE type=#{type} 
+    <if test="posX != ''  and posX != null">and pos_x=#{posX} </if>
+    <if test="startTime != ''  and startTime != null">and start_time=#{startTime}</if>
+  </delete>
+  <insert id="addAD" useGeneratedKeys="true" keyProperty="id" parameterType="AdPosition">
+    INSERT INTO ad_position (pos_x,
+    <if test="posY != ''  and posY != null">pos_y,</if>
+    start_time,end_time,type)
+    VALUES
+    (
+    #{posX},
+    <if test=" posY  != '' and  posY  != null">#{posY},</if>
+    #{startTime, jdbcType=DATE},#{endTime, jdbcType=DATE},#{type}
+    );
+  </insert>
+  <insert id="addBatchAD" useGeneratedKeys="true" parameterType="java.util.List">  
+    <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+    </selectKey>  
+    insert INTO ad_position (pos_x,type,start_time,end_time)    
+    values  
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.posX},#{item.type},#{item.startTime},#{item.endTime})
+    </foreach>  
+</insert>  
+
+</mapper>

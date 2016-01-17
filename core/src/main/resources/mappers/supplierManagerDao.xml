@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.backgroundManage.dao.SupplierManagerDao">
+  <select id="getOneProduct" resultMap="productMap">
+    SELECT
+    a.id,
+    a.article_number,
+    a.is_highlight,
+    a.characters,
+    a.summary,
+    a.size,
+    IFNULL(IFNULL(a.supplier_index_image,a.seller_index_image),a.index_image) AS
+    index_image,
+    a.price,
+    a.file,
+    a.state,
+    a.is_block,
+    a.is_showcase,
+    a.is_hide_stats,
+    b.down_count_alltime,
+    b.taobao_count_alltime,
+    cast(uncompress(c.description_bin) as char) AS description
+    FROM product a
+    INNER JOIN product_stats b ON a.id=b.product_id
+    INNER JOIN
+    product_meta c ON a.id=c.product_id
+    WHERE a.user_id=#{supplierId}
+    AND a.id=#{productId}
+  </select>
+  <resultMap type="Product" id="productMap">
+    <result property="productStats.downCountAlltime" column="down_count_alltime" />
+    <result property="productStats.taobaoCountAlltime" column="taobao_count_alltime" />
+    <result property="productMeta.descriptionBin" column="description" />
+
+  </resultMap>
+
+  <!--保存产品编辑页 -->
+  <update id="savaProductEdit" parameterType="Product">
+    update product
+    <set>
+      is_hide_stats=#{isHideStats}
+      <if test="articleNumber &gt; ''">
+        ,article_number=#{articleNumber}
+      </if>
+      <if test="characters &gt; ''">
+        ,characters=#{characters}
+      </if>
+      <if test="price &gt; ''">
+        ,price=#{price}
+      </if>
+      <if test="file &gt; ''">
+        ,file=#{file}
+      </if>
+    </set>
+    <where>
+      id=#{id}
+    </where>
+  </update>
+  <update id="saveProductDescriptionBlob">
+    update product_meta
+    <set>
+      description_bin=compress(#{descriptionBlob,jdbcType=BLOB})
+    </set>
+    where product_id=#{productId}
+  </update>
+</mapper>

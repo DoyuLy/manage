@@ -1,0 +1,12 @@
+此文件夹存放网站go2主站前台相关页面模板文件：
+1、welcome存放首页模板
+2、unique存放独家页面模板
+3、firsthand存放一手货源页面模板
+4、guang存放逛逛页面模板
+5、supplier存放认证厂商页面模板
+6、dropshipper存放一件代发页面模板
+7、cameraman存放摄影市场页面模板
+8、logistics存放购途物流页面模板
+9、store存放天马到店（实体店）页面模板
+10、product存放产品详情页面相关模板
+11、account文件夹存放注册、登陆、找回密码等账户相关页面模板

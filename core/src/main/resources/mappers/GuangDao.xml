@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"        
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.guang.dao.GuangDao">
+  <!-- 多表连接示例，供大家参考 -->
+  <!-- 多表连接示例，供大家参考 -->
+
+  <!-- 一对一关系 -->
+
+  <sql id="guangFields">
+    id,
+    category_id,
+    product_id,
+    seven_diff_count,
+    title,
+    article_number,
+    price,
+    characters,
+    props,
+    state,
+    publish_time,
+    create_time
+  </sql>
+
+  <!-- 查询逛逛信息 -->
+  <select id="getGuangProductList" parameterType="Guang" resultType="Guang">
+    select g.id, g.product_id,g.price, g.category_id, g.props, g.article_number, g.characters, g.title,g.publish_time,
+    (d.down_count_alltime+d.taobao_count_alltime) as num,d.renew_time,g.seven_diff_count,b.name,b.face,b.content,d.down_count_alltime
+    from
+    product_guang g
+    left join product_comment b on b.product_id=g.product_id
+    left join product_stats d on g.product_id = d.product_id
+    left join
+    product p on p.id=g.product_id
+    left join user u on u.id=p.user_id
+    left join supplier s on s.user_id=p.user_id where 1=1
+    and p.state=1 and
+    u.state=1 and s.state=1 and g.state=1
+    <if test="categoryId != '' and categoryId != null and categoryId &lt; 8">
+      and g.category_id = #{categoryId}
+    </if>
+    <if test="categoryId != '' and categoryId != null and categoryId &gt; 7">
+      <if test="categoryId == 8">
+        and instr(g.props,'乐福鞋')
+      </if>
+      <if test="categoryId == 9">
+        and instr(g.props,'平底鞋')
+      </if>
+      <if test="categoryId == 10">
+        and instr(g.props,'高跟鞋')
+      </if>
+      <if test="categoryId == 11">
+        and instr(g.props,'厚底鞋')
+      </if>
+    </if>
+    <if test="props!='' and props != null">
+      and instr(g.props,#{props})
+    </if>
+
+    <choose>
+      <when test="price!='' and price != null and price=='0.0'">
+
+      </when>
+      <when test="price!='' and price != null and price=='1.0'">
+        and g.price&gt;=0 and g.price&lt;=100
+      </when>
+      <when test="price!='' and price != null and price=='2.0'">
+        and g.price&gt;=101 and g.price&lt;=200
+      </when>
+      <when test="price!='' and price != null and price=='3.0'">
+        and g.price&gt;=201 and g.price&lt;=500
+      </when>
+      <when test="price!='' and price != null and price=='4.0'">
+        and g.price&gt;500
+      </when>
+    </choose>
+
+    <choose>
+      <when test="order!='' and order != null and order=='new'">
+        order by g.publish_time desc
+      </when>
+      <when test="order!='' and order != null and order =='hot'">
+        order by g.seven_diff_count desc
+      </when>
+      <when test="order!='' and order != null and order == 'like'">
+
+      </when>
+      <otherwise>order by d.renew_time desc</otherwise>
+    </choose>
+    limit #{page},20
+  </select>
+  <!-- 根据条件查询逛逛总数 -->
+  <select id="getGuangProductTotal" parameterType="Guang" resultType="java.lang.Integer">
+    select count(*)
+    from product_guang g
+    left join product_comment b
+    on b.product_id=g.product_id
+    left join product_stats d on g.product_id = d.product_id
+    left join product p on p.id=g.product_id
+    left join
+    user u on u.id=p.user_id
+    left join supplier s on s.user_id=p.user_id where 1=1
+    and p.state=1 and u.state=1 and s.state=1 and g.state=1
+  </select>
+
+  <!-- 根据种类查询种类总数 -->
+  <select id="getCountEveryCategory" parameterType="string" resultType="java.lang.Integer">
+    select count(*) num from product_guang g
+    left join product p on p.id=g.product_id
+    left join user u on u.id=p.user_id
+    left join supplier s
+    on s.user_id=p.user_id
+    where p.state=1 and u.state=1 and s.state=1 and g.state=1
+    <if test="category!=null and category!=''">
+      <choose>
+        <when test="category=='乐福鞋' or category=='平底鞋' or category=='高跟鞋' or category=='厚底鞋'">
+          and instr(g.props,#{category})
+        </when>
+        <otherwise>and g.category_id=#{category}</otherwise>
+      </choose>
+    </if>
+
+  </select>
+
+</mapper>

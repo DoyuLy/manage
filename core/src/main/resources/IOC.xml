@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context" xmlns:task="http://www.springframework.org/schema/task"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                     http://www.springframework.org/schema/beans/spring-beans.xsd  
+                     http://www.springframework.org/schema/context 
+                     http://www.springframework.org/schema/context/spring-context-3.2.xsd
+                     http://www.springframework.org/schema/tx  
+                     http://www.springframework.org/schema/tx/spring-tx.xsd  
+                     http://www.springframework.org/schema/aop  
+                     http://www.springframework.org/schema/aop/spring-aop.xsd
+                     http://www.springframework.org/schema/task 
+                     http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+  <!-- 是否启动init 初始化流程 -->
+  <!-- default-init-method="init"> -->
+  <context:component-scan base-package="com.go2plus">
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+  </context:component-scan>
+
+  <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+    <property name="url" value="jdbc:mysql://git.c.ximgs.net:3306/go2plus?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true" />
+    <property name="username" value="go2plus_test" />
+    <property name="password" value="WImuJEVsneD3LL7B" />
+
+
+    <!-- 配置初始化大小、最小、最大 -->
+    <property name="initialSize" value="2" />
+    <property name="minIdle" value="1" />
+    <property name="maxActive" value="5" />
+    <!-- 配置获取连接等待超时的时间 -->
+    <property name="maxWait" value="10000" />
+    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+    <property name="timeBetweenEvictionRunsMillis" value="60000" />
+    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+    <property name="minEvictableIdleTimeMillis" value="300000" />
+    <property name="validationQuery" value="SELECT now()" />
+    <property name="testWhileIdle" value="true" />
+    <property name="testOnBorrow" value="false" />
+    <property name="testOnReturn" value="false" />
+    <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+    <property name="poolPreparedStatements" value="true" />
+    <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+    <!-- 配置监控统计拦截的filters -->
+    <property name="filters" value="stat" />
+  </bean>
+
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="configLocation" value="classpath:mybatis-cfg.xml" />
+    <property name="dataSource" ref="dataSource" />
+    <property name="typeAliasesPackage"
+      value="
+    com.go2plus.core.common.vo;
+    com.go2plus.core.page.vo;
+    com.go2plus.core.portal.vo;
+    com.go2plus.core.product.vo;
+    com.go2plus.core.publish.vo;
+    com.go2plus.core.userCenter.vo;
+    com.go2plus.core.backgroundManage.vo;
+    com.go2plus.core.specialTopic.vo;
+    com.go2plus.core.guang.vo;
+    com.go2plus.core.promotion.vo;
+    " />
+    <property name="plugins">
+      <array>
+        <bean class="com.github.pagehelper.PageHelper">
+          <property name="properties">
+            <value>
+              dialect=mysql
+            </value>
+          </property>
+        </bean>
+      </array>
+    </property>
+    <!-- 如果 .xml与 dao 不在同一目录 -->
+    <property name="mapperLocations" value="classpath*:mappers/*.xml" />
+  </bean>
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.go2plus" />
+    <property name="markerInterface" value="com.go2plus.common.mvc.DAO" />
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource" />
+  </bean>
+
+  <tx:advice id="userTxAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+      <tx:method name="save*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" />
+      <tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" />
+      <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" />
+      <tx:method name="find*" propagation="SUPPORTS" />
+      <tx:method name="query*" propagation="SUPPORTS" />
+      <tx:method name="get*" propagation="SUPPORTS" />
+      <tx:method name="select*" propagation="SUPPORTS" />
+    </tx:attributes>
+  </tx:advice>
+
+  <aop:config>
+    <aop:pointcut id="pc" expression="execution(public * com.go2plus..*Service.*(..))" />
+    <aop:advisor pointcut-ref="pc" advice-ref="userTxAdvice" />
+  </aop:config>
+  <task:annotation-driven />
+</beans>
+

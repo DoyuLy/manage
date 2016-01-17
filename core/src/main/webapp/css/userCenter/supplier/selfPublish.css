@@ -1,0 +1,25 @@
+@charset "utf-8";
+.right-con #errmsg{float:left;font-size:14px;width:611px;line-height:24px;padding:5px 20px;margin:0;margin-bottom:1px;background:#333;color:#FFF;}
+.right-con #errmsg strong{float:none;font-weight:bold;font-size:16px;color:#ff0;}
+.right-con p{float:left;width:785px;padding:5px;padding-left:10px;margin:0;}
+.right-con #pshow{float:left;width:785px;padding:5px;padding-bottom:10px;padding-left:10px;margin:0;border-bottom:1px solid #C0C0C0;}
+.right-con .domainbox{float:left;width:671px;padding:10px;padding-left:10px;margin:0;margin-bottom:1px;background:#F7E7E7;}
+.right-con label{float:left;font-size:15px;font-weight:bold;width:700px;}
+.right-con label em{font-style: normal;font-weight:normal;font-size:12px;color:#666;margin-left:10px;}
+.right-con p span{float:left;margin:3px 0;margin-left:10px;}
+.right-con p span em{float:left;width:auto;margin-top:2px;margin-right:5px;}
+.right-con p .btnimgbox{float:left;width:82px;height:31px;margin-top:2px;background:url(/images/ggdp_btn_01.gif) no-repeat;}
+.right-con p .btnimgbox iframe{width:82px;height:31px;filter:alpha(opacity=0);-moz-opacity:0;opacity:0;}
+.right-con p .btnrarbox{float:left;width:100px;height:31px;margin-top:2px;background:url(/images/ggdp_btn_02.gif) no-repeat;}
+.right-con p .btnrarbox iframe{width:100px;height:31px;filter:alpha(opacity=0);-moz-opacity:0;opacity:0;}
+.right-con span em{float:left;margin-right:5px;font-style: normal;}
+.right-con span input{font-size:12px;font-weight:bold;padding:3px;font-family:"Tahoma","微软雅黑";}
+.right-con span #ProductMemo{width:771px;height:550px;}
+.right-con .domaintable{font-size:16px;font-weight:bold;color:#666;}
+.right-con .domaintable em{color:#B20F0A;}
+.right-con strong{float:left;width:650px;font-weight: normal;color:#666;}
+.right-con .btnbox{float:left;padding:5px;padding-left:10px;margin:0;text-align:left;}
+.right-con .btnbox .regbutton {margin:0;margin-top:8px;padding:0;border:0;background-color: #ff6c00;width:161px;height:40px;cursor: pointer;color: #fff;}
+.stau4 {color: #0C0;font-size: 12px;color: #1A4A88;}
+.stau3 {color: #F00;font-size: 12px;}
+input , select{border:1px solid gray;}

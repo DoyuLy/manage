@@ -1,0 +1,4 @@
+.msg-form{}
+#id_msg_notice{width: 800px;height: 200px;border: 1px solid #ddd;line-height: 22px;}
+.sub-btn{height: 35px;width: 150px;margin: 20px 0;color: #fff;background: #ff6c00;text-align: center;cursor: pointer;}
+.one-announce{border-bottom: 1px dashed #bbb;line-height: 20px;padding: 10px;}

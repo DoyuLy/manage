@@ -1,0 +1,10 @@
+@charset "utf-8";
+/*消息管理模块*/
+.recent-box{width:568px;float: left;}
+.recent{width: 100px;line-height: 30px;color: #fff;background-color: #D30000;margin-bottom: 15px;}
+.m-con{line-height: 30px;}
+.m-time{display: block;line-height: 28px;color: #B6B6B6;padding-bottom: 5px;border-bottom: 1px solid #bbb;}
+.fac-from{margin: 0 10px;color: #D30000;}
+
+
+

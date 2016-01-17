@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"        
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.go2plus.core.userCenter.dao.lnSeller2ProductDao">
+  <resultMap id="rm" type="InSeller2Product">
+    <id property="sellerUserId" column="seller_user_id" />
+    <result property="productId" column="product_id" />
+    <result property="supplierUserId" column="supplier_user_id" />
+  </resultMap>
+  
+  <select id="selectAll" parameterType="int" resultMap="rm">
+    SELECT * FROM ln_seller2product LIMIT #{start},10
+  </select>
+
+  <select id="selectMap" parameterType="int" resultType="hashmap">
+    SELECT * FROM ln_seller2product       LIMIT #{start},20
+  </select>
+</mapper>

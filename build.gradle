@@ -1,0 +1,23 @@
+description="go2plus go2 new plantform powered by java"
+subprojects {
+
+    version = '2.0'
+    apply plugin: 'java'
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+    repositories {
+        maven {
+            //gaoxinran.wicp.net:9353/nexus   ======>>baseScore 2 mintues 48.487 seconds
+            url "http://gaoxinran.wicp.net:9353/nexus/content/groups/public/"
+            //maven.OSChina.net   ======>>baseScore 4 mintues 28.357 seconds
+            //url "http://maven.oschina.net/content/groups/public/"
+            //http://repo1.maven.org/maven2/   ======>>not stable, blocked by greatwall usually
+            //mavenCentral()
+        }
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.11'
+    }
+}

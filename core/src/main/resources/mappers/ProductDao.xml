@@ -1,0 +1,1028 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.product.dao.ProductDao">
+
+  <!-- 根据用户id查找厂家认发布的产品列表 -->
+  <resultMap type="Product" id="ProductResultMap">
+    <id property="id" column="id" />
+    <result property="id" column="id" />
+    <result property="articleNumber" column="article_number" />
+    <result property="propsinit" column="propsinit" />
+    <result property="weight" column="pro_weight" />
+    <result property="isHighlight" column="is_highlight" />
+    <result property="createTime" column="create_time" />
+    <result property="modifyTime" column="modify_time" />
+    <result property="referProductId" column="refer_product_id" />
+    <result property="isDirectSale" column="is_direct_sale" />
+    <result property="indexImage" column="index_image" />
+    <result property="price" column="price" />
+    <result property="state" column="state" />
+    <result property="isBlock" column="is_block" />
+    <result property="isShowcase" column="is_showcase" />
+    <result property="fileInfo" column="file_info" />
+    <result property="categoryId" column="category_id" />
+    <association property="category" column="id" javaType="Category">
+      <id property="id" column="id" />
+      <result property="title" column="title" />
+      <result property="weight" column="weight" />
+    </association>
+    <association property="productStats" column="product_id" javaType="ProductStats">
+      <id property="id" column="id" />
+      <!-- <result property="promotionWeight" column="promotion_weight" /> -->
+      <!-- <result property="showcaseWeight" column="showcase_weight" /> -->
+      <result property="downCountAlltime" column="down_count_alltime" />
+      <result property="taobaoCountAlltime" column="taobao_count_alltime" />
+      <result property="totalperson" column="totalperson" />
+    </association>
+  </resultMap>
+
+
+  <!-- 根据用户id查找厂家认发布的产品列表 -->
+  <select id="getProductsListById" resultMap="ProductResultMapT">
+    SELECT
+    a.id,
+    a.article_number,
+    a.propsinit,
+    a.weight as pro_weight,
+    a.is_highlight,
+    a.create_time,
+    a.modify_time,
+    a.min_sale_price,
+    a.refer_product_id,
+    a.is_direct_sale,
+    IFNULL(IFNULL(a.supplier_index_image,a.index_image),a.seller_index_image)
+    AS index_image,
+    a.price,
+    a.state,
+    a.is_block,
+    a.is_showcase,
+    a.file_info,
+    a.category_id,
+    a.label_id,
+    b.title,
+    b.weight,
+    c.promotion_weight,
+    c.showcase_weight,
+    c.down_count_alltime,
+    c.taobao_count_alltime,
+    IFNULL(c.down_count_alltime,0)+IFNULL(c.taobao_count_alltime,0) as
+    totalperson
+
+    FROM product a
+    INNER JOIN category b
+    ON a.category_id=b.id
+    LEFT JOIN product_stats c ON a.id=c.product_id
+    WHERE
+    a.user_id=#{userId}
+    <if test="key != '' and key !=null">
+      AND a.article_number = #{key}
+    </if>
+    <if test="searchType == 'all'">
+      AND a.state>=0
+      ORDER BY a.state DESC,pro_weight
+      DESC,c.promotion_weight
+      DESC,a.is_showcase DESC,a.modify_time
+      DESC,a.is_highlight
+      DESC,b.weight DESC
+    </if>
+    <if test="searchType == 'price'">
+      AND a.state>=0
+      ORDER BY a.state DESC,a.price ASC,pro_weight
+      DESC,c.promotion_weight
+      DESC,a.is_showcase DESC,a.modify_time
+      DESC,a.is_highlight
+      DESC,b.weight DESC
+    </if>
+    <if test="searchType == 'createtime'">
+      AND a.state>=0
+      ORDER BY a.state DESC,a.create_time
+      DESC,pro_weight
+      DESC,c.promotion_weight DESC,a.is_showcase
+      DESC,a.modify_time
+      DESC,a.is_highlight DESC,b.weight DESC
+    </if>
+    <if test="searchType == 'modifytime'">
+      AND a.state>=0
+      ORDER BY a.state DESC,a.modify_time
+      DESC,pro_weight
+      DESC,c.promotion_weight DESC,a.is_showcase
+      DESC,a.modify_time
+      DESC,a.is_highlight DESC,b.weight DESC
+    </if>
+    <if test="searchType == 'recommend'">
+      AND a.state>=0
+      AND c.state=1 AND (c.showcase_weight>0 OR
+      c.promotion_weight>0)
+      ORDER BY a.state DESC,pro_weight
+      DESC,c.promotion_weight
+      DESC,c.showcase_weight DESC,a.modify_time
+      DESC,b.weight DESC
+    </if>
+    <if test="searchType == 'shelfon'">
+      AND a.state>0
+      ORDER BY a.state DESC,pro_weight
+      DESC,c.promotion_weight
+      DESC,a.is_showcase DESC,a.modify_time
+      DESC,a.is_highlight
+      DESC,b.weight DESC
+    </if>
+    <if test="searchType == 'shelfoff'">
+      AND a.state=0
+      ORDER BY a.state DESC,pro_weight
+      DESC,c.promotion_weight
+      DESC,a.is_showcase DESC,a.modify_time
+      DESC,a.is_highlight
+      DESC,b.weight DESC
+    </if>
+    <if test="searchType == 'violation'">
+      AND a.state>=0
+      AND (a.is_block > 0 OR a.refer_product_id >
+      0)
+      ORDER BY a.state DESC,pro_weight DESC,c.promotion_weight
+      DESC,a.is_showcase DESC,a.modify_time DESC,a.is_highlight
+      DESC,b.weight DESC
+    </if>
+  </select>
+  <resultMap type="Product" id="ProductResultMapT">
+    <result property="category.title" column="title" />
+    <result property="category.weight" column="weight" />
+    <result property="productStats.downCountAlltime" column="down_count_alltime" />
+    <result property="productStats.taobaoCountAlltime" column="taobao_count_alltime" />
+    <result property="productStats.totalperson" column="totalperson" />
+  </resultMap>
+
+  <!--根据用户id获取厂家最近一周被发布到淘宝的产品数量 <select id="findWeekPublishById" parameterType="int" resultType="int"> select count(*) from (select distinct 
+    product_id from taobao_item where date(create_day)>=20151021) a join product b on a.product_id=b.id where b.user_id=#{user_id} </select> -->
+
+
+  <resultMap type="Complain" id="ComplainResultMap">
+    <id property="id" column="id" />
+    <result property="isFixed" column="is_fixed" />
+    <result property="createTime" column="create_time" />
+    <result property="review" column="review" />
+    <result property="credit" column="credit" />
+    <result property="ip" column="ip" />
+    <association property="product" column="id" javaType="Product">
+      <id property="id" column="id" />
+      <result property="id" column="proid" /><!-- proid 产品货号 -->
+      <result property="indexImage" column="index_image" />
+      <result property="articleNumber" column="article_number" />
+      <result property="price" column="price" />
+      <result property="state" column="state" />
+    </association>
+    <association property="site" column="user_id" javaType="Site">
+      <id property="id" column="id" />
+      <result property="subdomain" column="subdomain" />
+    </association>
+  </resultMap>
+  <select id="getComplainListById" resultMap="ComplainResultMap">
+    SELECT
+    a.review,
+    a.credit,
+    a.is_fixed,
+    a.ip,
+    a.create_time,
+    b.price,
+    b.state,
+    IFNULL(b.supplier_index_image,IFNULL(b.index_image,b.seller_index_image))
+    AS index_image,
+    b.id as proid,
+    b.article_number,
+    c.subdomain
+    FROM
+    complain
+    a
+    LEFT JOIN product b ON a.product_id = b.id
+    LEFT JOIN site c ON
+    a.supplier_user_id=c.user_id
+    WHERE a.supplier_user_id=#{userId} AND
+    a.state>=0
+    AND a.create_time > date_sub(CURDATE(),interval 100 month)
+    ORDER BY a.id DESC
+  </select>
+
+  <select id="getAllCategory" resultType="Category">
+    SELECT *
+    FROM category
+    WHERE state != '-1'
+    ORDER BY id DESC
+    LIMIT #{offset}, #{pageSize}
+  </select>
+
+  <select id="checkArticlekNum" resultType="Boolean">
+    SELECT if(count(id)=0,TRUE ,FALSE )
+    FROM product
+    WHERE user_id = #{userId} AND
+    article_number = #{articleNum};
+  </select>
+
+
+
+
+  <resultMap type="Promotion" id="PromotionResultMap">
+    <id property="id" column="id" />
+    <result property="posX" column="pos_x" />
+    <result property="title" column="changelog" />
+    <result property="startTime" column="start_time" />
+    <result property="endTime" column="end_time" />
+    <result property="userId" column="supplier_user_id" />
+    <association property="supplier" column="user_id" javaType="Supplier">
+      <id property="id" column="id" />
+      <result property="title" column="supplier_title" />
+    </association>
+    <association property="product" column="id" javaType="Product">
+      <id property="id" column="id" javaType="int" jdbcType="INTEGER" />
+      <result property="id" column="id" />
+      <result property="price" column="price" />
+      <result property="characters" column="characters" />
+      <result property="articleNumber" column="article_number" />
+      <result property="indexImage" column="main_image" />
+    </association>
+  </resultMap>
+
+  <select id="getUCPromotions" resultMap="PromotionResultMap">
+    SELECT
+    a.pos_x,
+    a.title AS changelog,
+    a.start_time,
+    a.end_time,
+    a.user_id as supplier_user_id,
+
+    b.id,
+    b.price,
+    b.characters,
+    b.article_number,
+    IFNULL(IFNULL(b.supplier_index_image,b.seller_index_image),b.index_image) as main_image,
+
+    IFNULL(d.brand,d.title) as supplier_title
+
+    FROM
+    promotion a
+    INNER JOIN product b ON b.id=a.product_id
+    <!-- INNER JOIN user as c ON b.user_id=c.id -->
+    INNER JOIN supplier as d ON a.user_id=d.user_id
+    WHERE a.start_time &lt; NOW()
+    <!-- AND a.end_time &gt; NOW() -->
+    AND b.state=1 AND b.state=1 AND a.pos_x LIKE 'u%'
+    ORDER BY RAND()
+    LIMIT 30;
+  </select>
+
+
+  <resultMap type="Product" id="RecommendProductResultMap">
+    <id property="id" column="id" />
+    <result property="characters" column="characters" />
+    <result property="articleNumber" column="article_number" />
+    <result property="id" column="id" />
+    <result property="price" column="price" />
+    <result property="indexImage" column="main_image" />
+    <association property="supplier" column="user_id" javaType="Supplier">
+      <id property="id" column="id" />
+      <result property="title" column="supplier_title" />
+    </association>
+    <association property="productStats" column="product_id" javaType="ProductStats">
+      <id property="id" column="id" />
+      <result property="id" column="id" />
+      <result property="promotionWeight" column="promotion_weight" />
+    </association>
+  </resultMap>
+  <!-- 此sql需要修改 -->
+  <select id="getRecommendList" resultMap="RecommendProductResultMap">
+    SELECT
+    a.id,
+    a.characters,
+    a.article_number,
+    a.price,
+    IFNULL(IFNULL(a.supplier_index_image,a.seller_index_image),a.index_image) as main_image,
+
+    IFNULL(c.brand,c.title) as supplier_title,
+
+    d.promotion_weight
+
+    FROM product as a
+    INNER JOIN user as b ON a.user_id=b.id
+    INNER JOIN supplier as c ON a.user_id=c.user_id
+    INNER JOIN
+    product_stats as d ON a.id=d.product_id
+    WHERE c.certified_type>0 AND b.state=1 AND a.state=1 AND
+    a.create_time>DATE_SUB(CURDATE(),interval 100 day)
+    LIMIT 15;
+  </select>
+
+  <!-- 查询产品品类数 -->
+  <select id="queryProductCategory" resultMap="productCategoryMap">
+    SELECT
+    a.category_id,
+    MAX(b.title) AS title,
+    COUNT(*) AS categoryNum
+    FROM
+    product a
+    JOIN
+    category b ON a.category_id = b.id
+    and a.state=1
+    where a.user_id=#{supplierId}
+    AND a.is_block=0 AND a.state=1
+    GROUP BY
+    a.category_id
+    order by
+    b.weight DESC
+  </select>
+
+  <resultMap id="productCategoryMap" type="Product">
+    <result property="category.title" column="title" />
+  </resultMap>
+
+  <!-- 查询店铺产品页面 -->
+  <select id="queryProductById" resultMap="ProductMap">
+    SELECT a.id,
+    a.article_number,
+    a.is_highlight,
+    IFNULL(a.supplier_index_image, IFNULL(a.seller_index_image, a.index_image)) AS index_image,
+    IF (a.refer_product_id > 0 and e.price > a.price,e.price,a.price) AS price,
+    IFNULL(b.brand, b.title) AS supplier_title,
+    a.STATE,
+    a.is_block,
+    a.is_showcase,
+    c.promotion_weight,
+    c.showcase_weight,
+    d.weight,
+    a.characters,
+    a.refer_product_id,
+    a.label_id,
+    a.category_id,
+    b.title
+    FROM product a INNER JOIN supplier b
+    ON a.user_id = b.user_id LEFT JOIN
+    product_stats c
+    ON a.id = c.product_id
+    JOIN category d
+    ON
+    a.category_id = d.id
+    LEFT JOIN product e
+    ON a.refer_product_id = e.id
+    AND a.refer_product_id > 0
+    WHERE
+    a.user_id =
+    #{supplierId}
+    <if test="categoryId>0">
+      and a.category_id=#{categoryId}
+    </if>
+    AND a.state = 1
+    AND a.is_block = 0
+    <if test="isTailGoods==1">
+      and a.label_id=2
+    </if>
+    order by
+    <choose>
+      <when test="sortedId==1">
+        a.modify_time DESC,c.promotion_weight DESC,a.weight DESC,c.renew_time DESC,a.create_time DESC
+      </when>
+      <when test="sortedId==2">
+        c.taobao_count_season+c.down_count_season DESC,c.promotion_weight DESC,a.weight DESC,c.renew_time DESC,a.create_time
+        DESC
+      </when>
+      <when test="sortedId==3">
+        a.price DESC,c.promotion_weight DESC,a.weight DESC,c.renew_time DESC,a.create_time DESC
+      </when>
+      <when test="sortedId==4">
+        a.price ASC,c.promotion_weight DESC,a.weight DESC,c.renew_time DESC,a.create_time DESC
+      </when>
+      <when test="sortedId==5">
+        a.create_time DESC,c.promotion_weight DESC,a.weight DESC,c.renew_time DESC
+      </when>
+      <otherwise>
+        a.weight DESC,a.modify_time DESC
+      </otherwise>
+    </choose>
+  </select>
+  <resultMap type="Product" id="ProductMap">
+    <result property="productStats.promotionWeight" column="promotion_weight" />
+    <result property="productStats.showcaseWeight" column="showcase_weight" />
+    <result property="category.weight" column="weight" />
+    <result property="supplier.title" column="title" />
+  </resultMap>
+
+  <select id="getProductsBySupplierId" parameterType="Integer" resultMap="getProductsBySupplierid">
+    SELECT
+    a.id,
+    a.article_number,
+    a.is_highlight,
+    IFNULL(IFNULL(a.supplier_index_image,a.index_image),a.seller_index_image) AS index_image,
+    a.price,
+    b.title,
+    a.state,
+    a.is_block,
+    a.is_showcase,
+    c.promotion_weight,
+    c.showcase_weight,
+    b.weight
+    FROM product a
+    INNER JOIN category b ON
+    a.category_id=b.id
+    LEFT JOIN
+    product_stats c ON a.id=c.product_id
+    WHERE a.user_id=#{supplierId} AND a.state>0
+    ORDER BY a.weight
+    DESC,a.modify_time DESC LIMIT 5
+  </select>
+
+  <resultMap id="getProductsBySupplierid" type="Product">
+    <result property="category.title" column="title" />
+    <result property="category.weight" column="weight" />
+    <result property="productStats.promotionWeight" column="promotion_weight" />
+    <result property="productStats.showcaseWeight" column="showcase_weight" />
+  </resultMap>
+
+
+  <!-- 独家板块 -->
+  <select id="getUniqueProduct" resultMap="uniqueProductMap">
+    SELECT
+    b.id,
+    b.characters,
+    b.article_number,
+    IFNULL(b.supplier_index_image,
+    IFNULL(b.seller_index_image, b.index_image)) AS index_image,
+    b.price,
+    IFNULL(c.brand, c.title) AS supplier_title
+    FROM
+    product b
+    INNER JOIN
+    supplier c ON b.user_id = c.user_id
+    INNER JOIN
+    product_stats d ON
+    b.id = d.product_id
+    INNER JOIN
+    user e ON b.user_id = e.id
+    WHERE
+    b.refer_product_id IS NULL
+    AND b.is_block = 0
+    AND b.state = 1
+    AND e.state = 1
+    AND b.is_unique = 1
+    AND b.unique_state = 1
+    AND b.category_id &lt;= 5
+    AND b.category_id &gt; 0
+    AND c.state = 1
+    <choose>
+      <when test="categoryId=='n3'">
+        AND DATE_ADD(b.create_time, INTERVAL 3 DAY) &gt; NOW() AND b.category_id &lt;= 5
+      </when>
+      <when test="categoryId=='n7'">
+        AND DATE_ADD(b.create_time, INTERVAL 7 DAY) &gt; NOW() AND b.category_id &lt;= 5
+      </when>
+      <when test="categoryId=='m5'">
+        AND c.market_id = 5 AND b.category_id &lt;= 5
+      </when>
+      <when test="categoryId=='m2'">
+        AND c.market_id = 2 AND a.category_id != 9
+      </when>
+      <when test="categoryId=='c0'">
+        AND b.category_id = 0
+      </when>
+      <when test="categoryId=='c1'">
+        AND b.category_id = 1
+      </when>
+      <when test="categoryId=='c2'">
+        AND b.category_id = 2
+      </when>
+      <when test="categoryId=='c3'">
+        AND b.category_id = 3
+      </when>
+      <when test="categoryId=='c4'">
+        AND b.category_id = 4
+      </when>
+      <when test="categoryId=='c5'">
+        AND b.category_id = 5
+      </when>
+      <otherwise>
+        AND b.category_id &lt;= 5
+      </otherwise>
+    </choose>
+    order by
+    <choose>
+      <when test="sortId==1">
+        b.id DESC, d.promotion_weight DESC,d.showcase_weight DESC,b.weight DESC,d.renew_time DESC
+      </when>
+      <when test="sortId==2">
+        d.taobao_count_season DESC, d.promotion_weight DESC, d.showcase_weight DESC, b.weight DESC,d.renew_time
+        DESC
+      </when>
+      <when test="sortId==3">
+        d.down_count_season DESC, d.promotion_weight DESC, d.showcase_weight DESC, b.weight DESC,d.renew_time DESC
+      </when>
+      <when test="sortId==4">
+        d.taobao_count_season+d.down_count_season DESC,b.weight DESC,d.renew_time DESC,b.create_time DESC
+      </when>
+      <when test="sortId==5">
+        b.price ASC,d.promotion_weight DESC, d.showcase_weight DESC, b.weight DESC,d.renew_time DESC
+      </when>
+      <when test="sortId==6">
+        b.price DESC,d.promotion_weight DESC, d.showcase_weight DESC, b.weight DESC,d.renew_time DESC
+      </when>
+      <otherwise>
+        b.weight DESC
+      </otherwise>
+    </choose>
+  </select>
+  <resultMap id="uniqueProductMap" type="Product">
+    <result property="supplier.brand" column="supplier_title" />
+  </resultMap>
+
+  <select id="getSupplierByProduct" parameterType="int" resultType="int">
+    select user_id
+    from product
+    where id=#{productId}
+  </select>
+  <!--查找该用户的商品的最大权重值 -->
+  <select id="maxWeight" resultType="java.lang.Integer">
+    select IFNULL(max(weight),-1) as maxweight from product WHERE 1=1
+    <if test="userId!=null and userId!=''">
+      and user_id = #{userId}
+    </if>
+  </select>
+
+  <!--更新指定用户指定商品的权重值 -->
+  <update id="updateMaxWeight">
+    update product set weight = #{maxWeight},modify_time = now() where id = #{productId} and user_id = #{userId}
+  </update>
+
+
+  <!--更新指定用户指定商品的权重值 -->
+  <update id="updateWeight">
+    update product set weight = #{weight} where id = #{productId} and user_id = #{userId} and state = 1;
+  </update>
+
+  <!--更新供货商商品状态1:上架0:下架-1删除 -->
+  <update id="updateState">
+    update product set state = #{state},modify_time = now() where id = #{productId} and user_id = #{userId};
+  </update>
+
+  <!--取消独款 -->
+  <update id="updateIsNotUnique">
+    update product set is_unique=0 where id = #{productId};
+  </update>
+
+  <!--下架商品时，同时取消商品的关联和推荐属性 -->
+  <update id="updateHighShow">
+    update product set is_highlight=0,is_showcase=0 where id=#{productId}
+  </update>
+
+  <!--关联与取消关联 -->
+  <update id="updateHighlight">
+    update product set is_highlight=#{flag},modify_time=now() where id=#{productId} and user_id=#{userId}
+  </update>
+
+  <!--修改最低零售价 -->
+  <update id="updateMinPrice">
+    update product set min_sale_price=#{minSalePrice} where id=#{productId}
+  </update>
+  <!--修改标签 -->
+  <update id="updateLabel">
+    update product set label_id=#{label} where id=#{productId}
+  </update>
+  <!--查询用户已关联的商品id列表 -->
+  <select id="getHighlighted" resultType="java.lang.Integer">
+    SELECT id FROM product WHERE user_id = #{userId} AND is_highlight = 1 AND state>=0 ORDER BY
+    update_time DESC
+  </select>
+  <!--根据用户id和商品id获取有个商品对象 -->
+  <resultMap type="Product" id="ProductResultMapByUserIdAndProductId">
+    <id property="id" column="id" />
+    <result property="articleNumber" column="article_number" />
+    <result property="isHighlight" column="is_highlight" />
+    <result property="characters" column="characters" />
+    <result property="summary" column="summary" />
+    <result property="size" column="size" />
+    <result property="indexImage" column="index_image" />
+    <result property="price" column="price" />
+    <result property="file" column="file" />
+    <result property="state" column="state" />
+    <result property="isBlock" column="is_block" />
+    <result property="isShowcase" column="is_showcase" />
+    <result property="isHideStats" column="is_hide_stats" />
+    <result property="downCountAlltime" column="down_count_alltime" />
+    <result property="taobaoCountAlltime" column="taobao_count_alltime" />
+    <result property="description" column="description" />
+  </resultMap>
+  <select id="getProduct" resultMap="ProductResultMapByUserIdAndProductId">
+    SELECT
+    a.id,
+    a.article_number,
+    a.is_highlight,
+    a.characters,
+    a.summary,
+    a.size,
+    IFNULL(IFNULL(a.supplier_index_image,a.seller_index_image),a.index_image) AS
+    index_image,
+    a.price,
+    a.file,
+    a.state,
+    a.is_block,
+    a.is_showcase,
+    a.is_hide_stats,
+    b.down_count_alltime,
+    b.taobao_count_alltime,
+    UNCOMPRESS(c.description_bin) AS description
+    FROM product a
+    INNER JOIN product_stats b ON a.id=b.product_id
+    INNER JOIN product_meta c ON a.id=c.product_id
+    WHERE a.user_id=#{userId} and
+    a.id=#{productId}
+  </select>
+
+  <!--获取产品的货号和supplier_title -->
+  <select id="getSupplierTitle" resultType="Product">
+    select a.id,a.article_number,ifnull(b.brand,b.title) as supplier_title
+    from product a
+    left
+    join supplier b on b.user_id=a.user_id
+    where a.id=#{productId}
+    limit 1
+  </select>
+
+  <select id="query" parameterType="int" resultType="Product">
+    SELECT * FROM product
+    <where>
+      id=#{id}
+    </where>
+  </select>
+
+  <resultMap type="Product" id="NewProductResultMap">
+    <id property="id" column="id" />
+    <result property="price" column="price" />
+    <result property="characters" column="characters" />
+    <result property="indexImage" column="index_image" />
+    <result property="articleNumber" column="article_number" />
+    <association property="supplier" column="user_id" javaType="Supplier">
+      <id property="id" column="id" />
+      <result property="title" column="supplier_title" />
+    </association>
+  </resultMap>
+
+  <select id="queryNewProductsBySupplier" resultMap="NewProductResultMap">
+    SELECT
+    a.id,
+    a.price,
+    a.characters,
+    IFNULL(a.supplier_index_image,IFNULL(a.seller_index_image,a.index_image))
+    AS index_image,
+    a.article_number,
+    IFNULL(b.brand,b.title) AS
+    supplier_title
+    FROM product a LEFT JOIN supplier b ON
+    a.user_id=b.user_id
+    <where>
+      a.state=1 AND a.is_block=0 AND a.user_id=#{userId} AND
+      a.id!=#{productId}
+    </where>
+    ORDER BY a.id DESC
+    LIMIT #{size}
+  </select>
+  <select id="queryHotProductsBySupplier" resultMap="NewProductResultMap">
+    SELECT
+    a.id,
+    a.price,
+    a.characters,
+    IFNULL(a.supplier_index_image,IFNULL(a.seller_index_image,a.index_image))
+    AS index_image,a.article_number,
+    IFNULL(b.brand,b.title) AS
+    supplier_title
+    FROM product a
+    INNER JOIN supplier b ON
+    a.user_id=b.user_id
+    LEFT JOIN product_stats c ON a.id=c.product_id
+    WHERE a.state=1 AND
+    a.is_block=0 AND a.user_id=#{userId} AND
+    a.id!=#{productId}
+    ORDER BY c.taobao_count_season+c.down_count_season
+    DESC
+    LIMIT #{size}
+  </select>
+
+  <!-- 四张次图 -->
+  <select id="getTaobaoImg" parameterType="int" resultType="TaobaoItemImage">
+    SELECT product_id,
+    item_value
+    FROM taobao_item_image
+    WHERE
+    item_name='indeximgs'
+    AND product_id=#{productId}
+    AND state =1
+    ORDER BY times DESC
+    LIMIT 4
+  </select>
+
+  <!--产品详情 -->
+  <select id="getProductDetail" parameterType="int" resultMap="productDetailMap">
+    SELECT
+    a.id,
+    a.index_image,
+    a.label_id,
+    a.article_number,
+    a.price,
+    a.characters,
+    a.is_direct_sale,
+    a.category_id,
+    a.is_hide_stats,
+    if(a.category_id in (8,9,11,12,14,16,17),1,0) as productSizeShow,
+    a.size,
+    a.state,
+    a.create_time,
+    a.update_time,
+    g.NAME AS
+    label_name,
+    IFNULL(b.brand,b.title) AS title,
+    b.market_id,
+    b.is_manufacturer,
+    b.certified_type,
+    c.taobao_count_alltime,
+    c.taobao_count_season,
+    c.down_count_alltime,
+    c.down_count_season,
+    d.taobao_cid,
+    CAST(UNCOMPRESS(e.description_bin) AS CHAR) AS description,
+    d.taobao_parent_cid,
+    d.title AS product_category,
+    h.NAME,
+    h.face,
+    h.content
+    FROM
+    product a
+    INNER JOIN
+    supplier b ON a.user_id = b.user_id
+    LEFT
+    JOIN
+    product_stats c
+    ON
+    a.id = c.product_id
+    INNER JOIN
+    category d ON a.category_id
+    = d.id
+    INNER JOIN
+    product_meta e ON a.id = e.product_id
+    INNER JOIN
+    user f ON
+    a.user_id = f.id
+    LEFT JOIN
+    product_comment h ON h.product_id =
+    a.id
+    LEFT JOIN
+    product_label g ON g.id = a.label_id
+    WHERE
+    a.STATE = 1
+    AND
+    f.STATE = 1
+    AND a.id = #{productId}
+  </select>
+
+  <resultMap type="Product" id="productDetailMap">
+    <result property="supplier.title" column="title" />
+    <result property="supplier.marketId" column="market_id" />
+    <result property="supplier.isManufacturer" column="is_manufacturer" />
+    <result property="supplier.certifiedType" column="certified_type" />
+    <result property="productStats.taobaoCountAlltime" column="taobao_count_alltime" />
+    <result property="productStats.taobaoCountSeason" column="taobao_count_season" />
+    <result property="productStats.downCountAlltime" column="down_count_alltime" />
+    <result property="productStats.downCountSeason" column="down_count_season" />
+    <result property="category.taobaoCid" column="taobao_cid" />
+    <result property="category.taobaoParentCid" column="taobao_parent_cid" />
+    <result property="category.title" column="product_category" />
+    <result property="productMeta.descriptionBin" column="description" />
+    <result property="productLabel.name" column="label_name" />
+    <result property="productComment.name" column="name" />
+    <result property="productComment.face" column="face" />
+    <result property="productComment.content" column="content" />
+  </resultMap>
+
+  <!-- 判断用户是否下载、发布过商品 -->
+  <select id="getUserOperation" resultType="String">
+    select
+    'hasDownloaded' as userOper
+    from log_download
+    where state=1
+    and product_id=#{productId}
+    and user_id=#{userId}
+    and type=0
+    union
+    select
+    'hasLinked' as userOper
+    from log_download
+    where state=1
+    and product_id=#{productId}
+    and
+    user_id=#{userId}
+    and type=1
+    union
+    select
+    'hasPublished'
+    from taobao_item
+    where state=1
+    and product_id=#{productId}
+    and user_id=#{userId}
+  </select>
+
+  <insert id="saveProductComplain" parameterType="Complain" useGeneratedKeys="true" keyProperty="id">
+    insert into complain(
+    supplier_user_id,
+    user_id,
+    product_id,
+    complain_category_id,
+    review,
+    images,
+    ip,
+    is_fixed,
+    weight,
+    state,
+    create_time
+    )
+    values(
+    #{supplierUserId},
+    #{userId},
+    #{productId},
+    #{complainCategoryId},
+    #{review},
+    #{images},
+    #{ip},
+    #{isFixed},
+    #{weight},
+    #{state},
+    now()
+    )
+  </insert>
+
+  <!-- 获取产品详情上方的4个产品链接信息 -->
+  <select id="getProductLink" parameterType="int" resultMap="productLinkMap">
+    SELECT
+    a.id,
+    a.article_number,
+    a.characters,
+    a.price,
+    IFNULL(a.supplier_index_image,
+    IFNULL(a.seller_index_image, a.index_image)) AS index_image,
+    IFNULL(b.brand, b.title) AS supplier_title
+    FROM
+    product a
+    LEFT JOIN
+    supplier b ON a.user_id = b.user_id
+    WHERE
+    b.user_id= #{supplierId}
+    AND a.state = 1
+    AND a.is_block = 0
+    ORDER BY
+    a.is_highlight DESC , a.weight DESC
+    LIMIT 4
+  </select>
+
+  <resultMap type="Product" id="productLinkMap">
+    <result property="supplier.title" column="supplier_title" />
+  </resultMap>
+
+  <!-- 所有产品 -->
+  <select id="getAllProduct" resultMap="allProductMap">
+    select a.*,
+    b.*,
+    c.*,
+    d.*,
+    f.*,
+    cast(g.description_bin as char) as product_description_bin,
+    g.*,
+    h.*,
+    j.*,
+    m.*,
+    n.*
+    from product a
+    left join
+    product_comment b
+    on a.id=b.product_id
+    left join product_guang c
+    on a.id=c.product_id
+    left join
+    product_id_encode d
+    on a.id=d.product_id
+    left
+    join product_label f
+    on a.label_id=f.id
+    left join product_meta g
+    on a.id=g.product_id
+    left join
+    product_punish_log h
+    on a.id=h.product_id
+    left
+    join product_search2 j
+    on a.id=j.product_id
+    <!-- #left join product_share_log k #on a.id=k.productId -->
+    left join product_stats m
+    on a.id=m.product_id
+    left join product_tuan n
+    on a.id=n.product_id
+    limit 2
+  </select>
+
+   <resultMap type="Product" id="allProductMap">
+    <result property="productComment.id" column="id" />
+    <result property="productComment.productId" column="product_id" />
+    <result property="productComment.name" column="name" />
+    <result property="productComment.face" column="face" />
+    <result property="productComment.content" column="content" />
+    <result property="productComment.createTime" column="create_time" />
+    <result property="productComment.updateTime" column="update_time" />
+
+    <result property="productGuang.id" column="id" />
+    <result property="productGuang.productId" column="product_id" />
+    <result property="productGuang.categoryId" column="category_id" />
+    <result property="productGuang.sevenDiffCou" column="seven_diff_count" />
+    <result property="productGuang.title" column="title" />
+    <result property="productGuang.articleNumber" column=" article_number" />
+    <result property="productGuang.price" column="price" />
+    <result property="productGuang.characters" column="characters" />
+    <result property="productGuang.props" column="props" />
+    <result property="productGuang.state" column="state" />
+    <result property="productGuang.publishTime" column="publish_time" />
+    <result property="productGuang.createTime" column="create_time" />
+
+    <result property="productLabel.id" column="id" />
+    <result property="productLabel.name" column="name" />
+    <result property="productLabel.state" column="state" />
+    <result property="productLabel.createTime" column="create_time" />
+    <result property="productLabel.updateTime" column="update_time" />
+
+    <result property="productMeta.id" column="id" />
+    <result property="productMeta.descriptionBin" column="description_bin" />
+    <result property="productMeta.material" column="material" />
+    <result property="productMeta.tips" column="tips" />
+    <result property="productMeta.state" column="state" />
+    <result property="productMeta.createTime" column="create_time" />
+    <result property="productMeta.updateTime" column="update_time" />
+
+    <result property="productPunishLog.id" column="id" />
+    <result property="productPunishLog.productId" column="product_id" />
+    <result property="productPunishLog.referProductId" column="refer_product_id" />
+    <result property="productPunishLog.operatorId" column="operator_id" />
+    <result property="productPunishLog.type" column="type" />
+    <result property="productPunishLog.memo" column="memo" />
+    <result property="productPunishLog.state" column="state" />
+    <result property="productPunishLog.createTime" column="create_time" />
+    <result property="productPunishLog.updateTime" column="update_time" />
+
+    <result property="productSearch2.productId" column="product_id " />
+    <result property="productSearch2.labelId" column="label_id" />
+    <result property="productSearch2.modifyTime" column="modify_time" />
+    <result property="productSearch2.characters" column="characters " />
+    <result property="productSearch2.supplierIndexImage" column="supplier_index_image" />
+    <result property="productSearch2.sellerIndexImage" column="seller_index_image" />
+    <result property="productSearch2.indexImage" column="index_image" />
+    <result property="productSearch2.price" column="price" />
+    <result property="productSearch2.articleNumber" column="article_number" />
+    <result property="productSearch2.downCountSeason" column="down_count_season" />
+    <result property="productSearch2.taobaoCountSeason" column="taobao_count_season " />
+    <result property="productSearch2.supplierTitle" column="supplier_title" />
+    <result property="productSearch2.brand" column="brand" />
+    <result property="productSearch2.productState" column="product_state " />
+    <result property="productSearch2.supplierState" column="supplier_state" />
+    <result property="productSearch2.referProductId" column="refer_product_id " />
+    <result property="productSearch2.certifiedType" column="certified_type" />
+    <result property="productSearch2.userState" column="user_state " />
+    <result property="productSearch2.categoryId" column="category_id" />
+    <result property="productSearch2.marketId" column="market_id" />
+    <result property="productSearch2.promotionWeight" column="promotion_weight " />
+    <result property="productSearch2.showcaseWeight" column="showcase_weight" />
+    <result property="productSearch2.renewTime" column="renew_time " />
+    <result property="productSearch2.categoryWeight" column="category_weight" />
+    <result property="productSearch2.material" column="material" />
+    <result property="productSearch2.tips" column="tips " />
+    <result property="productSearch2.productWeight" column="product_weight" />
+    <result property="productSearch2.isUnique" column="is_unique" />
+    <result property="productSearch2.props" column="props" />
+    <result property="productSearch2.isDirectSale" column="is_direct_sale" />
+    <result property="productSearch2.productHits" column="product_hits" />
+    <result property="productSearch2.size" column="size " />
+    <result property="productSearch2.createTime" column="create_time" />
+
+    <result property="productStats.id" column="id" />
+    <result property="productStats.productId" column="product_id" />
+    <result property="productStats.propsCountAlltime" column="props_count_alltime" />
+    <result property="productStats.viewCountAlltime" column="view_count_alltime" />
+    <result property="productStats.downCountAlltime" column="down_count_alltime" />
+    <result property="productStats.downCountSeason" column="down_count_season" />
+    <result property="productStats.taobaoCountAlltime" column="taobao_count_alltime" />
+    <result property="productStats.taobaoCountSeason" column="taobao_count_season" />
+    <result property="productStats.renewTime" column="renew_time" />
+    <result property="productStats.promotionWeight" column="promotion_weight" />
+    <result property="productStats.stPromotionWeight" column="st_promotion_weight" />
+    <result property="productStats.showcaseWeight" column="showcase_weight" />
+    <result property="productStats.state" column="state" />
+    <result property="productStats.createTime" column="create_time" />
+    <result property="productStats.updateTime" column="update_time" />
+
+    <result property="productTuan.id" column="id" />
+    <result property="productTuan.productId" column="product_id" />
+    <result property="productTuan.type" column="type" />
+    <result property="productTuan.state" column="state" />
+    <result property="productTuan.createTime" column="createTime" />
+    <result property="productTuan.updateTime" column="updateTime" />
+  </resultMap>
+</mapper>                                      

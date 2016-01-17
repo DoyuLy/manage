@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"        
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.userCenter.dao.DaifaDao">
+	<resultMap id="daifaResult" type="Daifa">
+			<id property="id" column="id" javaType="Integer"/>
+				<result property="userId"  column="user_id"	javaType="Integer"/>
+				<result property="marketId"  column="market_id"	javaType="Integer"/>
+				<result property="siteId"  column="site_id"	javaType="Integer"/>
+				<result property="title"  column="title"	javaType="String"/>
+				<result property="contact"  column="contact"	javaType="String"/>
+				<result property="cardNumber"  column="card_number"	javaType="String"/>
+				<result property="cardImage"  column="card_image"	javaType="String"/>
+				<result property="jobNum"  column="job_num"	javaType="Integer"/>
+				<result property="mobile"  column="mobile"	javaType="String"/>
+				<result property="phone"  column="phone"	javaType="String"/>
+				<result property="qq"  column="qq"	javaType="String"/>
+				<result property="onlineState"  column="online_state"	javaType="Integer"/>
+				<result property="province"  column="province"	javaType="String"/>
+				<result property="city"  column="city"	javaType="String"/>
+				<result property="address"  column="address"	javaType="String"/>
+				<result property="alipay"  column="alipay"	javaType="String"/>
+				<result property="price"  column="price"	javaType="String"/>
+				<result property="pricePlus"  column="price_plus"	javaType="String"/>
+				<result property="memo"  column="memo"	javaType="String"/>
+				<result property="rate"  column="rate"	javaType="String"/>
+				<result property="terms"  column="terms"	javaType="String"/>
+				<result property="promise"  column="promise"	javaType="String"/>
+				<result property="email"  column="email"	javaType="String"/>
+				<result property="isAudit"  column="is_audit"	javaType="Integer"/>
+				<result property="cashDeposit"  column="cash_deposit"	javaType="Integer"/>
+				<result property="cashDepositHash"  column="cash_deposit_hash"	javaType="String"/>
+				<result property="quitTime"  column="quit_time"	javaType="Date"/>
+				<result property="giftList"  column="gift_list"	javaType="String"/>
+				<result property="weight"  column="weight"	javaType="Integer"/>
+				<result property="state"  column="state"	javaType="Integer"/>
+				<result property="createTime"  column="create_time"	javaType="Date"/>
+				<result property="updateTime"  column="update_time"	javaType="Date"/>
+				<result property="serviceNature"  column="service_nature"	javaType="String"/>
+			</resultMap>
+	
+	
+	<sql id="queryDaifaSql">
+      	<where>
+      	<![CDATA[
+			1=1
+		 ]]>
+						<if test="id!=null">
+			<![CDATA[
+				and d.id=#{id}
+			]]>
+		</if>
+								<if test="userId!=null">
+			<![CDATA[
+				and d.user_id=#{userId}
+			]]>
+		</if>
+								<if test="marketId!=null">
+			<![CDATA[
+				and d.market_id=#{marketId}
+			]]>
+		</if>
+								<if test="siteId!=null">
+			<![CDATA[
+				and d.site_id=#{siteId}
+			]]>
+		</if>
+								<if test="title!=null">
+			<![CDATA[
+				and d.title=#{title}
+			]]>
+		</if>
+								<if test="contact!=null">
+			<![CDATA[
+				and d.contact=#{contact}
+			]]>
+		</if>
+								<if test="cardNumber!=null">
+			<![CDATA[
+				and d.card_number=#{cardNumber}
+			]]>
+		</if>
+								<if test="cardImage!=null">
+			<![CDATA[
+				and d.card_image=#{cardImage}
+			]]>
+		</if>
+								<if test="jobNum!=null">
+			<![CDATA[
+				and d.job_num=#{jobNum}
+			]]>
+		</if>
+								<if test="mobile!=null">
+			<![CDATA[
+				and d.mobile=#{mobile}
+			]]>
+		</if>
+								<if test="phone!=null">
+			<![CDATA[
+				and d.phone=#{phone}
+			]]>
+		</if>
+								<if test="qq!=null">
+			<![CDATA[
+				and d.qq=#{qq}
+			]]>
+		</if>
+								<if test="onlineState!=null">
+			<![CDATA[
+				and d.online_state=#{onlineState}
+			]]>
+		</if>
+								<if test="province!=null">
+			<![CDATA[
+				and d.province=#{province}
+			]]>
+		</if>
+								<if test="city!=null">
+			<![CDATA[
+				and d.city=#{city}
+			]]>
+		</if>
+								<if test="address!=null">
+			<![CDATA[
+				and d.address=#{address}
+			]]>
+		</if>
+								<if test="alipay!=null">
+			<![CDATA[
+				and d.alipay=#{alipay}
+			]]>
+		</if>
+								<if test="price!=null">
+			<![CDATA[
+				and d.price=#{price}
+			]]>
+		</if>
+								<if test="pricePlus!=null">
+			<![CDATA[
+				and d.price_plus=#{pricePlus}
+			]]>
+		</if>
+								<if test="memo!=null">
+			<![CDATA[
+				and d.memo=#{memo}
+			]]>
+		</if>
+								<if test="rate!=null">
+			<![CDATA[
+				and d.rate=#{rate}
+			]]>
+		</if>
+								<if test="terms!=null">
+			<![CDATA[
+				and d.terms=#{terms}
+			]]>
+		</if>
+								<if test="promise!=null">
+			<![CDATA[
+				and d.promise=#{promise}
+			]]>
+		</if>
+								<if test="email!=null">
+			<![CDATA[
+				and d.email=#{email}
+			]]>
+		</if>
+								<if test="isAudit!=null">
+			<![CDATA[
+				and d.is_audit=#{isAudit}
+			]]>
+		</if>
+								<if test="cashDeposit!=null">
+			<![CDATA[
+				and d.cash_deposit=#{cashDeposit}
+			]]>
+		</if>
+								<if test="cashDepositHash!=null">
+			<![CDATA[
+				and d.cash_deposit_hash=#{cashDepositHash}
+			]]>
+		</if>
+								<if test="quitTime!=null">
+			<![CDATA[
+				and d.quit_time=#{quitTime}
+			]]>
+		</if>
+								<if test="giftList!=null">
+			<![CDATA[
+				and d.gift_list=#{giftList}
+			]]>
+		</if>
+								<if test="weight!=null">
+			<![CDATA[
+				and d.weight=#{weight}
+			]]>
+		</if>
+								<if test="state!=null">
+			<![CDATA[
+				and d.state=#{state}
+			]]>
+		</if>
+								<if test="createTime!=null">
+			<![CDATA[
+				and d.create_time=#{createTime}
+			]]>
+		</if>
+								<if test="updateTime!=null">
+			<![CDATA[
+				and d.update_time=#{updateTime}
+			]]>
+		</if>
+								<if test="serviceNature!=null">
+			<![CDATA[
+				and d.service_nature=#{serviceNature}
+			]]>
+		</if>
+				    	</where>
+   </sql>
+   
+   
+	<select id="findById" resultMap="daifaResult" parameterType="long">
+		<![CDATA[
+		SELECT
+		*
+		FROM daifa WHERE id=#{id}
+		]]>
+	</select>
+	
+	<select id="findPageList" resultMap="daifaResult" parameterType="map">
+		<![CDATA[
+			SELECT d.* FROM daifa d d
+    	]]>
+    	<include refid="queryDaifaSql"/>
+    	<![CDATA[
+		   ORDER BY d.id DESC limit ${startNum},${endNum}
+		]]>
+        
+	</select>
+	
+	<select id="findCount" resultType="int" parameterType="map">
+		<![CDATA[
+        	SELECT COUNT(1) FROM daifa d
+    	]]>
+    	<include refid="queryDaifaSql"/>
+	</select>
+	
+	<insert id="insert" parameterType="Daifa" useGeneratedKeys="true" keyProperty="id">
+			INSERT INTO daifa(
+						user_id,
+            contact,
+            qq,
+            service_nature
+						)VALUES(
+								#{userId},
+								#{contact},
+								#{qq},
+								#{serviceNature}
+							)
+	</insert>
+	
+	<update id="update" parameterType="Daifa">
+		<![CDATA[
+			UPDATE daifa SET
+												user_id=#{userId},
+												market_id=#{marketId},
+												site_id=#{siteId},
+												title=#{title},
+												contact=#{contact},
+												card_number=#{cardNumber},
+												card_image=#{cardImage},
+												job_num=#{jobNum},
+												mobile=#{mobile},
+												phone=#{phone},
+												qq=#{qq},
+												online_state=#{onlineState},
+												province=#{province},
+												city=#{city},
+												address=#{address},
+												alipay=#{alipay},
+												price=#{price},
+												price_plus=#{pricePlus},
+												memo=#{memo},
+												rate=#{rate},
+												terms=#{terms},
+												promise=#{promise},
+												email=#{email},
+												is_audit=#{isAudit},
+												cash_deposit=#{cashDeposit},
+												cash_deposit_hash=#{cashDepositHash},
+												quit_time=#{quitTime},
+												gift_list=#{giftList},
+												weight=#{weight},
+												state=#{state},
+												create_time=#{createTime},
+												update_time=#{updateTime},
+												service_nature=#{serviceNature},
+								WHERE id=#{id}
+		]]>
+	</update>
+	
+	<delete id="delete" parameterType="long">
+		<![CDATA[
+			DELETE FROM daifa WHERE id=#{id}
+		]]>
+	</delete>
+</mapper>

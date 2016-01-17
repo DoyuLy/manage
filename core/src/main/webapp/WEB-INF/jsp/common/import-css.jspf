@@ -1,0 +1,30 @@
+<link rel="stylesheet" type="text/css" href="${ctx}/resources/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/resources/font-awesome/css/font-awesome.css">
+<!-- <link rel="stylesheet" type="text/css" -->
+<%--   href="${ctx}/resources/page-transitions/css/default.css" /> --%>
+<!-- <link rel="stylesheet" type="text/css" -->
+<%--   href="${ctx}/resources/page-transitions/css/multilevelmenu.css" /> --%>
+<!-- <link rel="stylesheet" type="text/css" -->
+<%--   href="${ctx}/resources/page-transitions/css/component.css" /> --%>
+<!-- <link rel="stylesheet" type="text/css" -->
+<%--   href="${ctx}/resources/page-transitions/css/animations.css" /> --%>
+
+<!-- Stylesheet
+    ================================================== -->
+<link rel="stylesheet" type="text/css"
+  href="${ctx}/resources/css/style.css">
+
+<script type="text/javascript"
+  src="${ctx}/resources/page-transitions/js/modernizr.custom.js"></script>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="${ctx}/resources/js/html5shiv.min.js"></script>
+      <script src="${ctx}/resources/js/respond.min.js"></script>
+    <![endif]-->
+<script>
+  //获取全局变量
+  var ctx = '${ctx}';
+  var sps = '${sps}';
+  var jsonpPrefix = '${jsonpPrefix}';
+</script>

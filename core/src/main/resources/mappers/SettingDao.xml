@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.go2plus.core.common.dao.SettingDao">
+	<resultMap id="settingResult" type="Setting">
+			<id property="id" column="id" javaType="Integer"/>
+				<result property="itemName"  column="item_name"	javaType="String"/>
+				<result property="itemValue"  column="item_value"	javaType="String"/>
+				<result property="catalog"  column="catalog"	javaType="String"/>
+				<result property="state"  column="state"	javaType="Integer"/>
+				<result property="createTime"  column="create_time"	javaType="Date"/>
+				<result property="updateTime"  column="update_time"	javaType="Date"/>
+			</resultMap>
+	
+	
+	<sql id="querySettingSql">
+      	<where>
+      	<![CDATA[
+			1=1
+		 ]]>
+						<if test="id!=null">
+			<![CDATA[
+				and T.id=#{id}
+			]]>
+		</if>
+								<if test="itemName!=null">
+			<![CDATA[
+				and T.item_name=#{itemName}
+			]]>
+		</if>
+								<if test="itemValue!=null">
+			<![CDATA[
+				and T.item_value=#{itemValue}
+			]]>
+		</if>
+								<if test="catalog!=null">
+			<![CDATA[
+				and T.catalog=#{catalog}
+			]]>
+		</if>
+								<if test="state!=null">
+			<![CDATA[
+				and T.state=#{state}
+			]]>
+		</if>
+								<if test="createTime!=null">
+			<![CDATA[
+				and T.create_time=#{createTime}
+			]]>
+		</if>
+								<if test="updateTime!=null">
+			<![CDATA[
+				and T.update_time=#{updateTime}
+			]]>
+		</if>
+				    	</where>
+   </sql>
+   
+   
+	<select id="findById" resultMap="settingResult" parameterType="long">
+		<![CDATA[
+		SELECT
+		*
+		FROM setting WHERE id=#{id}
+		]]>
+	</select>
+	
+	<select id="findPageList" resultMap="settingResult" parameterType="map">
+		<![CDATA[
+			SELECT T.* FROM setting T T
+    	]]>
+    	<include refid="querySettingSql"/>
+    	<![CDATA[
+		   ORDER BY T.id DESC limit ${startNum},${endNum}
+		]]>
+        
+	</select>
+	
+	<select id="findCount" resultType="int" parameterType="map">
+		<![CDATA[
+        	SELECT COUNT(1) FROM setting T
+    	]]>
+    	<include refid="querySettingSql"/>
+	</select>
+  
+  <select id="findValueByName" resultType="java.lang.String">
+    select item_value from setting where item_name = 'regular_pattern'
+  </select>
+	
+	<insert id="insert" parameterType="Setting">
+		<![CDATA[
+			INSERT INTO setting(
+						id,
+						item_name,
+						item_value,
+						catalog,
+						state,
+						create_time,
+						update_time
+						)VALUES(
+						#{id},
+								#{itemName},
+								#{itemValue},
+								#{catalog},
+								#{state},
+								#{createTime},
+								#{updateTime}
+							)
+		]]>
+		<selectKey resultType="int" keyProperty = "id">
+	     	 SELECT LAST_INSERT_ID() AS ID
+	    </selectKey>
+	</insert>
+	
+	<update id="update" parameterType="Setting">
+		<![CDATA[
+			UPDATE setting SET
+												item_name=#{itemName},
+												item_value=#{itemValue},
+												catalog=#{catalog},
+												state=#{state},
+												create_time=#{createTime},
+												update_time=#{updateTime}
+								WHERE id=#{id}
+		]]>
+	</update>
+	
+	<delete id="delete" parameterType="long">
+		<![CDATA[
+			DELETE FROM setting WHERE id=#{id}
+		]]>
+	</delete>
+</mapper>

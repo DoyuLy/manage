@@ -1,0 +1,7 @@
+@charset "utf-8";
+/*登记手机模块*/
+.mobile-title{font-size: 15px;line-height: 30px;}
+.input{font-size: 14px;font-weight: bold;padding: 5px;font-family: "Tahoma","微软雅黑";border: 1px solid #999;}
+.tip-in{margin-left: 20px;}
+.sub-btn{height: 40px;width: 200px;color: #fff;background-color: #ff6c00;line-height: 40px;font-size: 22px;text-align: center;border: 0;margin-top: 15px;cursor: pointer;}
+

@@ -1,0 +1,16 @@
+/*ÈÝÆ÷*/
+.right-con{width: 100%;padding: 0;}
+/*×ó²àÄÚÈÝ*/
+.con-left{width: 728px;margin-bottom: 30px;padding: 0 15px;}
+.tab-head{height: 30px;line-height: 30px;background-color: #bababa;padding-left: 15px;}
+.det-box{border-bottom: 1px solid #ababab;}
+.one-tr{overflow: hidden;border: 1px solid #ababab;border-bottom: 0;}
+.tab-title{display: block;width: 100px;height: 30px;line-height: 30px;float: left;padding-left: 15px;border-right: 1px solid #ababab;}
+.tab-detail{display: block;width: 595px;height: 30px;line-height: 30px;float: left;padding-left: 15px;}
+/*ÓÒ²àÄÚÈÝ*/
+.con-right{width: 220px;border: 1px solid #bebebe;margin: 0 15px;padding-bottom: 10px;}
+.publish-link{display: block;background-color: #3889bb;color: white;line-height: 35px;padding-left: 10px;}
+.platform-msg{background-color: red;color: white;line-height: 35px;padding-left: 10px;}
+.det-msg{padding: 0 10px;margin-top: 10px;}
+
+
