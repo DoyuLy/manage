@@ -1,9 +1,0 @@
-/*票漂浮快样式*/
-#tips {position: fixed;z-index: 999;}
-#tips a {display: block;width: 44px;height:42px;position: relative;border: 1px solid #B8B8B8;border-top: 0;}
-#tips a img {width: 44px;height:42px;float: left;}
-#firstlink {border-top: 1px solid #B8B8B8!important;}
-#tips a span {display: none;position: absolute;width: 32px;height:30px;padding: 6px;font-size: 12px;right: 0;top: 0;color: white;background: #ff7e00;font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei";text-align: center;}
-#qr_code {width: 44px;height:42px;position: relative;border: 1px solid #B8B8B8;border-top: 0;}
-#code_float {position: absolute;width: 146px;height: 180px;left: -147px;top: -44px;display: none;background-image: url(/images/code_float_02.jpg);}
-#code_float a {display: block;width: 146px;height: 180px;border: 0!important;}

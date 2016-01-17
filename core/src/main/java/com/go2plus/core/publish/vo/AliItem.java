@@ -2,9 +2,6 @@ package com.go2plus.core.publish.vo;
 
 import java.util.Date;
 
-import com.go2plus.core.product.vo.Product;
-import com.go2plus.core.userCenter.vo.Supplier;
-import com.go2plus.core.userCenter.vo.User;
 
 /**
  * Copyright (C) 2015 GO2.CN. All rights reserved. This computer program source code file is protected by copyright law and international
@@ -33,25 +30,7 @@ public class AliItem {
   private Date     createTime;      // 记录创建时间
   private Date     updateTime;      // 记录最后修改时间
 
-  private User     user;            // 关联user表
-  private Product  product;         // 关联product表
-  private Supplier supplier;        // 关联supplier表
 
-  public User getUser() {
-    return user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
-  }
-
-  public Product getProduct() {
-    return product;
-  }
-
-  public void setProduct(Product product) {
-    this.product = product;
-  }
 
   public Integer getId() {
     return id;
@@ -171,14 +150,6 @@ public class AliItem {
 
   public void setUpdateTime(Date updateTime) {
     this.updateTime = updateTime;
-  }
-
-  public Supplier getSupplier() {
-    return supplier;
-  }
-
-  public void setSupplier(Supplier supplier) {
-    this.supplier = supplier;
   }
 
 }

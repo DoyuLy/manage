@@ -1,9 +1,0 @@
-@charset "utf-8";
-/*资料修改模块*/
-#supplierForm p{line-height: 35px;}
-.nowrite label{display: inline-block!important;}
-.nowrite{}
-#supplierForm p label{display: block;}
-#supplierForm p label em{font-weight: normal;font-size: 12px;margin: 0 8px;}
-#supplierForm p span input{border: 1px solid #999;line-height: 20px;height: 22px;margin: 0 5px;padding-left: 5px;}
-#supplierForm p span input.sub-btn{height: 40px;width: 200px;color: #fff;background-color: #ff6c00;line-height: 40px;font-size: 22px;text-align: center;border: 0;margin-top: 15px;cursor: pointer;}
