@@ -120,27 +120,27 @@
     <constructor-arg value="2016.01_go2plus_chengdu_china" />
   </bean>
   <!-- spring工具类 方便在非spring管理环境中获取bean -->
-    <bean id="springUtils" class="com.go2plus.photography.common.utils.SpringUtils"/>
+    <bean id="springUtils" class="com.go2plus.core.common.utils.SpringUtils"/>
 
     <!-- 设置默认的文件上传路径 -->
-    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="staticMethod" value="com.go2plus.photography.common.web.upload.FileUploadUtils.setDefaultBaseDir"/>
+   <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.go2plus.core.common.web.upload.FileUploadUtils.setDefaultBaseDir"/>
         <property name="arguments" value="${file.upload.dir}"/>
     </bean>
     
   <!-- 设置上传服务器路径-->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="staticMethod" value="com.go2plus.photography.common.web.upload.FileUploadUtils.setServerDir"/>
+        <property name="staticMethod" value="com.go2plus.core.common.web.upload.FileUploadUtils.setServerDir"/>
         <property name="arguments" value="${file.upload.server.dir}"/>
     </bean>
     <!-- 设置上传服务器访问地址-->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="staticMethod" value="com.go2plus.photography.common.web.upload.FileUploadUtils.setServerUrl"/>
+        <property name="staticMethod" value="com.go2plus.core.common.web.upload.FileUploadUtils.setServerUrl"/>
         <property name="arguments" value="${file.upload.server.url}"/>
     </bean>
 	<!-- 设置上传最大字节-->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="staticMethod" value="com.go2plus.photography.common.web.upload.FileUploadUtils.setDefaultMaxSize"/>
+        <property name="staticMethod" value="com.go2plus.core.common.web.upload.FileUploadUtils.setDefaultMaxSize"/>
         <property name="arguments" value="${file.upload.max.size}"/>
     </bean>
     
