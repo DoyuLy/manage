@@ -2,38 +2,56 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
 <!--      namespace：必须与对应的接口全类名一致     id:必须与对应接口的某个对应的方法名一致   -->  
-<mapper namespace="com.sys.management.mapper.MenuMapper">  
+<mapper namespace="com.go2plus.core.sys.dao.MenuDao">  
       
-    <insert id="save" parameterType="MenuEntity">  
-        insert into t_menu(resourceGrade,accessPath,checked,delFlag,parentID,resourceCode,resourceDesc,resourceName,resourceOrder,resourceType) values(#{resourceGrade},#{accessPath},#{checked},#{delFlag},#{parentID},#{resourceCode},#{resourceDesc},#{resourceName},#{resourceOrder},#{resourceType})  
-        
-        
+    <insert id="save" parameterType="Menu">  
+        insert into t_menu
+        (resource_grade,
+         access_path,
+         checked,
+         del_flag,
+         parent_id,
+         resource_code,
+         resource_desc,
+         resource_name,
+         resource_order,
+         resource_type) 
+         values(#{resourceGrade},#{accessPath},#{checked},#{delFlag},#{parentID},#{resourceCode},#{resourceDesc},#{resourceName},#{resourceOrder},#{resourceType})  
     </insert>  
       
-   <update id="update" parameterType="MenuEntity">  
-        update t_menu set resourceGrade=#{resourceGrade},accessPath#{accessPath},checked#{checked},delFlag#{delFlag},parentID#{parentID},resourceCode#{resourceCode},resourceDesc#{resourceDesc},resourceName#{resourceName},resourceOrder#{resourceOrder},resourceType#{resourceType} 
-        
-
-         where resourceID=#{resourceID}  
+   <update id="update" parameterType="Menu">  
+        update t_menu 
+        set 
+        	resource_grade=#{resourceGrade},
+        	access_path=#{accessPath},
+        	checked#{checked},
+        	del_flag=#{delFlag},
+        	parent_id=#{parentID},
+        	resource_code=#{resourceCode},
+        	resource_desc=#{resourceDesc},
+        	resource_name=#{resourceName},
+        	resource_order=#{resourceOrder},
+        	resource_type=#{resourceType} 
+        where id=#{id}  
     </update>  
       
-    <delete id="delete" parameterType="int">  
-        delete from t_menu where resourceID=#{resourceID}  
+    <delete id="delete" parameterType="Long">  
+        delete from t_menu where id=#{id}  
     </delete>  
       
      <!-- mybsits_config中配置的alias类别名,也可直接配置resultType为类路劲 -->    
-    <select id="findById" parameterType="int" resultType="MenuEntity">  
-        
-    select resourceID,resourceGrade,accessPath,checked,delFlag,parentID,resourceCode,resourceDesc,resourceName,resourceOrder,resourceType from t_menu where resourceID=#{resourceID}  
+    <select id="findById" parameterType="Long" resultType="Menu">  
+    	select * from t_menu where id=#{id}  
     </select>  
-         <!-- mybsits_config中配置的alias类别名,也可直接配置resultType为类路劲 -->    
-    <select id="findByResourceType" parameterType="String" resultType="MenuEntity">  
-        
-    select resourceID,resourceGrade,accessPath,checked,delFlag,parentID,resourceCode,resourceDesc,resourceName,resourceOrder,resourceType from t_menu where resourceType=#{resourceType}  
+    
+    <!-- mybsits_config中配置的alias类别名,也可直接配置resultType为类路劲 -->    
+    <select id="findByResourceType" parameterType="String" resultType="Menu">  
+    	select *
+        from t_menu where resource_type=#{resourceType}  
     </select> 
-    <select id="findAll" resultType="MenuEntity">  
-       
-     select resourceID,resourceGrade,accessPath,checked,delFlag,parentID,resourceCode,resourceDesc,resourceName,resourceOrder,resourceType from t_menu
+    
+    <select id="findAll" resultType="Menu">  
+     	select * from t_menu
     </select>  
       
 </mapper>  
