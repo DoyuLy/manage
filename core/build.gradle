@@ -1,4 +1,4 @@
-description="go2plus 核心模块"
+description="tpm"
 
 apply plugin: 'eclipse-wtp'
 apply plugin: 'war'
