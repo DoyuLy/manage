@@ -2,6 +2,8 @@ package com.go2plus.core.sys.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,8 @@ import com.go2plus.core.sys.vo.Menu;
 
 @Service
 public class MenuServiceImpl implements MenuService {
-	@Autowired
+	
+	@Resource
 	private MenuDao menuDao;
 
 	@Override

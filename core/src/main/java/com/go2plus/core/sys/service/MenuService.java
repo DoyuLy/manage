@@ -5,15 +5,16 @@ import java.util.List;
 import com.go2plus.core.sys.vo.Menu;
 
 public interface MenuService {
-	public boolean save(Menu menu);
 
-	public boolean update(Menu menu);
+	boolean save(Menu menu);
 
-	public boolean delete(Long id);
+	boolean update(Menu menu);
 
-	public Menu findById(Long id);
+	boolean delete(Long id);
 
-	public List<Menu> findAll();
+	Menu findById(Long id);
 
-	public List<Menu> findByResourceType(String resourceType);
+	List<Menu> findAll();
+
+	List<Menu> findByResourceType(String resourceType);
 }

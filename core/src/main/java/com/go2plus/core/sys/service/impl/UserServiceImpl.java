@@ -2,10 +2,11 @@ package com.go2plus.core.sys.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.go2plus.core.common.exception.SystemException;
 import com.go2plus.core.sys.dao.UserDao;
 import com.go2plus.core.sys.service.UserService;
 import com.go2plus.core.sys.vo.User;
@@ -13,7 +14,7 @@ import com.go2plus.core.sys.vo.User;
 @Service
 public class UserServiceImpl implements UserService {
 
-	@Autowired
+	@Resource
 	private UserDao userDao;
 
 	@Override

@@ -5,17 +5,17 @@ import java.util.List;
 import com.go2plus.common.mvc.DAO;
 import com.go2plus.core.sys.vo.User;
 
-public interface UserDao extends DAO {
+public interface UserDao extends DAO{
 
-	public User findById(Long id);
+	User findById(Long id);
 
-	public boolean save(User user);
+	boolean save(User user);
 
-	public boolean update(User user);
+	boolean update(User user);
 
-	public boolean delete(Long id);
+	boolean delete(Long id);
 
-	public User findUserByUserNameAndPassword(User user);
+	User findUserByUserNameAndPassword(User user);
 
-	public List<User> findAll();
+	List<User> findAll();
 }
