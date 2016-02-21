@@ -9,7 +9,7 @@ public interface UserDao extends DAO {
 
 	public User findById(Long id);
 
-	public void save(User user);
+	public boolean save(User user);
 
 	public boolean update(User user);
 

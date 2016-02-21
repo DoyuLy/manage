@@ -1,5 +1,7 @@
 package com.go2plus.core.sys.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,34 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao;
 
 	@Override
-	public User findById(Long id) throws SystemException {
+	public User findById(Long id){
 		User user = userDao.findById(id);
 		return user;
+	}
+
+	@Override
+	public boolean save(User user) {
+		return userDao.save(user);
+	}
+
+	@Override
+	public boolean update(User user) {
+		return userDao.update(user);
+	}
+
+	@Override
+	public boolean delete(Long id) {
+		return userDao.delete(id);
+	}
+
+	@Override
+	public User findUserByUserNameAndPassword(User user) {
+		return userDao.findUserByUserNameAndPassword(user);
+	}
+
+	@Override
+	public List<User> findAll() {
+		return userDao.findAll();
 	}
 
 }

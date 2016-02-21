@@ -1,11 +1,10 @@
-package com.go2plus.core.sys.dao;
+package com.go2plus.core.sys.service;
 
 import java.util.List;
-import com.go2plus.common.mvc.DAO;
+
 import com.go2plus.core.sys.vo.Menu;
 
-public interface MenuDao extends DAO {
-	
+public interface MenuService {
 	public boolean save(Menu menu);
 
 	public boolean update(Menu menu);
