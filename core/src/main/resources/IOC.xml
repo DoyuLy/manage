@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
-  xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context" xmlns:task="http://www.springframework.org/schema/task"
+  xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
   xsi:schemaLocation="http://www.springframework.org/schema/beans 
                      http://www.springframework.org/schema/beans/spring-beans.xsd  
                      http://www.springframework.org/schema/context 
@@ -8,20 +8,42 @@
                      http://www.springframework.org/schema/tx  
                      http://www.springframework.org/schema/tx/spring-tx.xsd  
                      http://www.springframework.org/schema/aop  
-                     http://www.springframework.org/schema/aop/spring-aop.xsd
-                     http://www.springframework.org/schema/task 
-                     http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+                     http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	<context:property-placeholder location="classpath:x.properties"/>
+	
+	<!-- 国际化的消息资源文件（本系统中主要用于显示/错误消息定制） -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <!-- 在web环境中一定要定位到classpath 否则默认到当前web应用下找  -->
+                <value>classpath:messages/messages</value>
+                <value>classpath:messages/ValidationMessages</value>
+            </list>
+        </property>
+        <property name="useCodeAsDefaultMessage" value="false"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="cacheSeconds" value="60"/>
+    </bean>
+	 <!-- 以下 validator  ConversionService 在使用 mvc:annotation-driven 会 自动注册-->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+
+    <!-- 类型转换及数据格式化 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
   <!-- 是否启动init 初始化流程 -->
   <!-- default-init-method="init"> -->
-  <context:component-scan base-package="com.go2plus">
+  <context:component-scan base-package="com.go2plus.**.service,com.go2plus.**.task">
     <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
   </context:component-scan>
 
+  
   <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-    <property name="url" value="jdbc:mysql://localhost:3306/tpm?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true" />
-    <property name="username" value="root" />
-    <property name="password" value="root" />
-
+    <property name="url" value="${db.url}" />
+    <property name="username" value="${db.username}" />
+    <property name="password" value="${db.password}" /> 
 
     <!-- 配置初始化大小、最小、最大 -->
     <property name="initialSize" value="2" />
@@ -49,8 +71,8 @@
     <property name="dataSource" ref="dataSource" />
     <property name="typeAliasesPackage"
       value="
-    com.go2plus.core.publish.vo;
-    com.go2plus.core.userCenter.vo;
+    com.go2plus.core.sys.vo;
+    com.go2plus.core.common.web.entity;
     " />
     <property name="plugins">
       <array>
@@ -92,6 +114,36 @@
     <aop:pointcut id="pc" expression="execution(public * com.go2plus..*Service.*(..))" />
     <aop:advisor pointcut-ref="pc" advice-ref="userTxAdvice" />
   </aop:config>
-  <task:annotation-driven />
+  
+  <!-- AES加密器 -->
+  <bean id="aes" class="com.go2plus.common.encrypt.AES">
+    <constructor-arg value="2016.01_go2plus_chengdu_china" />
+  </bean>
+  <!-- spring工具类 方便在非spring管理环境中获取bean -->
+    <bean id="springUtils" class="com.go2plus.photography.common.utils.SpringUtils"/>
+
+    <!-- 设置默认的文件上传路径 -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.go2plus.photography.common.web.upload.FileUploadUtils.setDefaultBaseDir"/>
+        <property name="arguments" value="${file.upload.dir}"/>
+    </bean>
+    
+  <!-- 设置上传服务器路径-->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.go2plus.photography.common.web.upload.FileUploadUtils.setServerDir"/>
+        <property name="arguments" value="${file.upload.server.dir}"/>
+    </bean>
+    <!-- 设置上传服务器访问地址-->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.go2plus.photography.common.web.upload.FileUploadUtils.setServerUrl"/>
+        <property name="arguments" value="${file.upload.server.url}"/>
+    </bean>
+	<!-- 设置上传最大字节-->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.go2plus.photography.common.web.upload.FileUploadUtils.setDefaultMaxSize"/>
+        <property name="arguments" value="${file.upload.max.size}"/>
+    </bean>
+    
+    <!-- <import resource="task.xml"/> -->
 </beans>
 

@@ -33,4 +33,17 @@ dependencies {
   compile 'commons-lang:commons-lang:2.3'
   compile 'org.apache.velocity:velocity:1.7'
   compile 'dom4j:dom4j:1.6.1'
+  
+  compile 'org.apache.commons:commons-lang3:3.1'
+  compile 'org.ocpsoft.prettytime:prettytime:3.2.3.Final'
+  compile 'joda-time:joda-time:2.3'
+  
+  compile 'org.apache.shiro:shiro-core:1.2.2'
+  compile 'org.apache.shiro:shiro-web:1.2.2'
+  compile 'org.apache.shiro:shiro-aspectj:1.2.2'
+  compile 'org.apache.shiro:shiro-ehcache:1.2.2'
+  compile 'org.apache.shiro:shiro-spring:1.2.2'
+  compile 'com.google.guava:guava:18.0'
+  compile 'javax.validation:validation-api:1.1.0.Final'
+  compile 'org.hibernate:hibernate-validator:4.1.0.Final'
 }
