@@ -14,6 +14,7 @@ public interface UserDao extends DAO{
 	boolean update(User user);
 
 	boolean delete(Long id);
+	
 
 	User findUserByUserNameAndPassword(User user);
 

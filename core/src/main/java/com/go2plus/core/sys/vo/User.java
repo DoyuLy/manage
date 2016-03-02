@@ -50,6 +50,9 @@ public class User extends BaseEntity implements Serializable{
 	private String status = UserStatus.normal.name();
 	// 是否删除
 	private Boolean deleted = Boolean.FALSE;
+	
+	
+	
 
 	public String getUsername() {
 		return username;

@@ -48,4 +48,10 @@ public class UserServiceImpl implements UserService {
 		return userDao.findAll();
 	}
 
+	@Override
+	public User findUser(User user) {
+		// TODO Auto-generated method stub
+		return userDao.findUserByUserNameAndPassword(user);
+	}
+
 }

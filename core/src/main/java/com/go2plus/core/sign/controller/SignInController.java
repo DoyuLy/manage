@@ -75,7 +75,7 @@ public class SignInController extends BaseVerificationController {
 	 * @return
 	 * @throws Exception
 	 */
-	/*@RequestMapping(value = "/login")
+	@RequestMapping(value = "/login")
 	public ModelAndView login(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		Box box = loadNewBox(request);
@@ -135,7 +135,7 @@ public class SignInController extends BaseVerificationController {
 					return createModelAndView("/core/account/login.jsp", box);
 				}
 
-				
+				/**
 				 * for(Cookie c : cookies){
 				 * if(c.getName().equalsIgnoreCase(X.ENCRYPTED+X.TIME)){ long
 				 * diff = format.parse( X.nowString()).getTime() -
@@ -153,7 +153,7 @@ public class SignInController extends BaseVerificationController {
 				 * if(hash != box.$c(X.ENCRYPTED+"hash").getValue()){ errorCode
 				 * = 6; box.setAttribute("errorCode", errorCode); return
 				 * createModelAndView("/core/account/login.jsp", box); }
-				 
+				 **/
 
 				user = userService.findUser(u);
 				if (user == null) {
@@ -168,66 +168,64 @@ public class SignInController extends BaseVerificationController {
 					String sessionid = MD5.md5Encode(X.uuid());
 					user.setLastLoginIp(ip);
 					user.setLastLoginTime(logintime);
-					user.setLastSession(sessionid);
-					user.setLastSessionTime(logintime);
 
-					int i = userService.updateUser(user);
+					//int i = userService.updateUser(user);
 
 					// 登录成功设置session 与 cookie
 					Cookie c = new Cookie(X.USER, user.getId().toString());
 					c.setMaxAge(-1);
 					box.getCookie().put(X.USER, c);
-					Cookie userType = new Cookie(X.USER_TYPE, user.getType()
-							.toString());
-					userType.setMaxAge(-1);
-					box.getCookie().put(X.USER_TYPE, userType);
+//					Cookie userType = new Cookie(X.USER_TYPE,user.getType()
+//							.toString());
+				//	userType.setMaxAge(-1);
+					//box.getCookie().put(X.USER_TYPE, userType);
 					writeCookies(box, response);
 
 					// request.getSession().setAttribute(X.USER, user);
-					request.getSession().setAttribute(X.USER,
-							user.getId().toString());
-					request.getSession().setAttribute(X.USER_TYPE,
-							user.getType().toString());
-					request.getSession().setAttribute(X.USER_NAME,
-							user.getUsername());
+//					request.getSession().setAttribute(X.USER,
+//							user.getId().toString());
+//					request.getSession().setAttribute(X.USER_TYPE,
+//							user.getType().toString());
+//					request.getSession().setAttribute(X.USER_NAME,
+//							user.getUsername());
 
 					// TODO use for login unique
 					request.getSession().setAttribute(X.SESSION_ID, sessionid);
 
 					String refer = (String) request.getSession().getAttribute(
 							"refer");
-					switch (user.getType()) {
-					// 卖家
-					case 0:
-						if (!StringUtils.isEmpty(refer)) {
-							request.getSession().removeAttribute("refer");
-							response.sendRedirect(refer);
-						} else {
-							response.sendRedirect("/userCenter/seller");
-						}
-						break;
-					// 商家
-					case 1:
-						if (!StringUtils.isEmpty(refer)) {
-							request.getSession().removeAttribute("refer");
-							response.sendRedirect(refer);
-						} else {
-							response.sendRedirect("/userCenter/supplier");
-						}
-						break;
-					// 摄影
-					case 2:
-						response.sendRedirect("");
-						break;
-					// 代发
-					case 3:
-						response.sendRedirect("");
-						break;
-					}
+//					switch (user.getType()) {
+//					// 卖家
+//					case 0:
+//						if (!StringUtils.isEmpty(refer)) {
+//							request.getSession().removeAttribute("refer");
+//							response.sendRedirect(refer);
+//						} else {
+//							response.sendRedirect("/userCenter/seller");
+//						}
+//						break;
+//					// 商家
+//					case 1:
+//						if (!StringUtils.isEmpty(refer)) {
+//							request.getSession().removeAttribute("refer");
+//							response.sendRedirect(refer);
+//						} else {
+//							response.sendRedirect("/userCenter/supplier");
+//						}
+//						break;
+//					// 摄影
+//					case 2:
+//						response.sendRedirect("");
+//						break;
+//					// 代发
+//					case 3:
+//						response.sendRedirect("");
+//						break;
+//					}
 					return null;
 				}
 			}
 		}
-	}*/
+	}
 
 }
