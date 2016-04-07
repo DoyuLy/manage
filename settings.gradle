@@ -1,1 +1,1 @@
-include '1click','sms','ad','photography','strength','core','delivery','pay','publish','search','behavior','common','empty','observer','imagehandler'
+include 'core','common'
